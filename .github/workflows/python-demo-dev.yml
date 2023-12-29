@@ -56,7 +56,7 @@ jobs:
           # 参数通过创建模板的api，动态生成
           language_type: ${{ env.flow_language_type }}
           # 参数通过创建模板的api，动态生成
-          version: ${{ env.flow_language_type }}
+          version: ${{ env.flow_language_version }}
           # 参数通过创建模板的api，动态生成
           build_cmd: ${{ env.flow_build_cmd }}
           
