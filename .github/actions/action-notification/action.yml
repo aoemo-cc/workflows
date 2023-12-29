@@ -1,0 +1,48 @@
+name: 'Notification'
+description: '消息通知'
+inputs:
+  channel_type:
+    description: '通知渠道'
+    default: 'feishu'
+    required: false
+    type: string
+  send_addr:
+    description: '通知地址'
+    required: true
+    type: string
+  content:
+    description: '通知内容'
+    required: true
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: 打印变量
+      run: |
+        echo -e "\033[33m channel_type：${{ inputs.channel_type }}\033[0m"
+        echo -e "\033[33m send_addr：${{ inputs.send_addr }}\033[0m"
+        echo -e "\033[33m content：${{ inputs.content }}\033[0m"
+      shell: bash
+      
+    - name: 飞书通知
+      run: |
+        curl "${{ inputs.send_addr }}" -H "Content-Type: application/json" -d "{\"msg_type\": \"text\", \"content\": {\"text\": \"【Workflow运行通知】\\n${{ inputs.content }}\"}}"
+      shell: bash
+      
+    
+    # - name: 飞书通知
+    #   if: ${{ inputs.channel_type == 'feishu' }}
+    #   env:
+    #     # 版本号如果更新， 需要到自托管服务器清理之前下载的代码包（linux-amd64-actions-feishu.tar.gz）
+    #     ACTIONS_FEISHU_TAG: 'v1.3.1'
+    #     INPUT_WEBHOOK: ${{ inputs.send_addr }}
+    #     INPUT_MESSAGE_TYPE: "post"
+    #     INPUT_TITLE: "Workflow 消息通知"
+    #     INPUT_CONTENT: "${{ inputs.content }}"
+    #   run: |
+    #     [[ -f linux-amd64-actions-feishu.tar.gz ]] || wget -q https://github.com/xiachufang/actions-feishu/releases/download/${{ env.ACTIONS_FEISHU_TAG }}/linux-amd64-actions-feishu.tar.gz
+    #     [[ -f feishu ]]  || tar zxf linux-amd64-actions-feishu.tar.gz feishu
+    #     ./feishu
+    #   shell: bash
+    

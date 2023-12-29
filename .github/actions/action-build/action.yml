@@ -1,0 +1,56 @@
+name: 'Build'
+description: '编译相关操作'
+inputs:
+  language_type:
+    description: '程序语言类型'
+    required: true
+    type: string
+  version:
+    description: '语言版本号'
+    required: true
+    type: string
+  build_cmd:
+    description: '编译命令'
+    required: true
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: 打印变量
+      run: |
+        echo -e "\033[33m language_type：${{ inputs.language_type }}\033[0m"
+        echo -e "\033[33m version：${{ inputs.version }}\033[0m"
+        echo -e "\033[33m build_cmd：${{ inputs.build_cmd }}\033[0m"
+      shell: bash
+      
+    - name: 配置Python环境
+      if: ${{ inputs.language_type == 'python' }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: "${{ inputs.version }}"
+      
+    - name: 配置Go环境
+      if: ${{ inputs.language_type == 'go' }}
+      uses: actions/setup-go@v5.0.0
+      with:
+        # 例如"1.19.2"
+        go-version: "${{ inputs.version }}"
+       
+    - name: 配置NodeJs环境
+      if: ${{ inputs.language_type == 'node' }}
+      uses: actions/setup-node@v4.0.1
+      with:
+        # 例如: 12.x, 10.15.1, >=10.15.0.
+        node-version: "${{ inputs.version }}"
+
+    - name: 配置flutter环境
+      if: ${{ inputs.language_type == 'swift-flutter' }}
+      # if: (inputs.language_type == 'swift') && (inputs.version != '')
+      uses: subosito/flutter-action@v2.12.0
+      with:
+        flutter-version: '3.13.9'
+       
+    - name: 执行编译
+      run: echo "${{ inputs.build_cmd }}" | bash 
+      shell: bash
