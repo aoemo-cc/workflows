@@ -43,9 +43,7 @@ jobs:
       - name: 拉代码
         uses: ./actions_temp/.github/actions/action-checkout
         with:
-          # 参数通过创建模板的api，动态生成
           repo_type: ${{ env.flow_repository_type }}
-          # 参数通过创建模板的api，动态生成
           repository: ${{ env.flow_repository_address }}
           ref: ${{ inputs.ref }}
           password: ${{ secrets.GH_TOKEN }}
@@ -53,19 +51,14 @@ jobs:
       - name: 编译
         uses: ./actions_temp/.github/actions/action-build
         with:
-          # 参数通过创建模板的api，动态生成
           language_type: ${{ env.flow_language_type }}
-          # 参数通过创建模板的api，动态生成
           version: ${{ env.flow_language_version }}
-          # 参数通过创建模板的api，动态生成
           build_cmd: ${{ env.flow_build_cmd }}
           
       - name: 单元测试
         uses: ./actions_temp/.github/actions/action-unit-test
         with:
-          # 参数通过创建模板的api，动态生成
           dependency_cmd: ${{ env.flow_dependency_cmd }}
-          # 参数通过创建模板的api，动态生成
           test_cmd: ${{ env.flow_test_cmd }}
         
       - name: 打包压缩
@@ -73,7 +66,7 @@ jobs:
           # 不能删除.github中的内容
           rm -rf .svn* .git .gitignore
           # <仓库名>-<环境代号>.tgz, 参数通过创建模板的api，动态生成
-          tar -zcvf ${flow_artifact_name} --exclude="actions_temp" *
+          tar -zcvf ${flow_artifact_name}.tgz --exclude="actions_temp" *
           ls -l ${flow_artifact_name}.tgz && tar -tzvf ${flow_artifact_name}.tgz
 
       - name: 上传代码包
@@ -87,9 +80,8 @@ jobs:
         # uses: ./.github/actions/action-notification
         uses: ./actions_temp/.github/actions/action-notification
         with:
-          channel_type: "feishu"
+          channel_type: ${{ secrets.flow_channel_type }}
           send_addr: ${{ secrets.FS_ROBOT }}
-          # 参数通过创建模板的api，动态生成
           content: "流水线：${{ github.WORKFLOW }}(${{ github.SERVER_URL }}/${{ github.REPOSITORY }}/actions/runs/${{ github.RUN_ID }})\\n部署次数：${{ github.RUN_NUMBER }}\\n发布环境：${{ env.flow_env }}\\n执行人：${{ github.ACTOR }}\\n当前作业:${{ github.JOB }}\\n运行状态：失败"
         
   deploy_before:
@@ -114,7 +106,7 @@ jobs:
         # uses的值无法使用env定义的变量，参数通过创建模板的api，动态生成
         uses: ./python-demo-dev/.github/actions/action-notification
         with:
-          channel_type: 'feishu'
+          channel_type: ${{ secrets.flow_channel_type }}
           send_addr: ${{ secrets.FS_ROBOT }}
           content: "流水线：${{ github.WORKFLOW }}(${{ github.SERVER_URL }}/${{ github.REPOSITORY }}/actions/runs/${{ github.RUN_ID }})\\n部署次数：${{ github.RUN_NUMBER }}\\n发布环境：${{ env.flow_env }}\\n执行人：${{ github.ACTOR }}\\n当前作业:${{ github.JOB }}\\n运行状态：失败"
         
