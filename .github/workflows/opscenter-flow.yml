@@ -17,7 +17,7 @@ env:
   flow_language_type: "python"
   flow_language_version: "3.9.13"
   flow_repository_type: "github"
-  flow_repository_address: "deming-org/opscenter-flow"
+  flow_repository_address: "aoemo-cc/opscenter-flow"
   flow_repository_user: ""
   flow_repository_password: "${{ secrets.GH_TOKEN }}"
   flow_build_cmd: "echo -e \"\\033[33m我是编译命令\\033[0m\""
