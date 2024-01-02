@@ -24,7 +24,7 @@ env:
   flow_dependency_cmd: "python -m pip install --upgrade pip; [[ -f requirements.txt ]] && pip install -r requirements.txt || echo '没有依赖文件'"
   flow_test_cmd: "python -V"
   # /data/<仓库名>/
-  flow_deploy_path: "/data/opscenter-flow-dev"
+  flow_deploy_path: "/data/opscenter-flow"
   flow_deploy_user: "aoemo"
   flow_channel_type: "feishu"
   flow_send_addr: ${{ secrets.FS_ROBOT }}
