@@ -167,7 +167,7 @@ jobs:
     if: ${{ !cancelled() }}
     needs:
       - deploy
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: 拉取自定义的action
         uses: actions/checkout@v4.1.1
