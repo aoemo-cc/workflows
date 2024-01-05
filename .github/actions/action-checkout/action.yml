@@ -1,30 +1,35 @@
 name: 'Checkout'
-description: '从不同版本控制仓库拉取代码'
+description: "从不同版本控制仓库拉取代码"
 inputs:
   repo_type:
-    description: '仓库类型'
+    description: "仓库类型"
     default: 'github'
     required: false
     type: string
   repository:
-    description: '仓库名（github仓库时只需要 <组织名>/<仓库名>，其他git仓库地址不要https://）'
+    description: "仓库名（github仓库时只需要 <组织名>/<仓库名>，其他git仓库地址不要https://）"
     required: true
     type: string
   ref:
-    description: '分支或标签'
+    description: "分支或标签"
     required: true
     type: string
   username:
-    description: '仓库账号'
+    description: "仓库账号"
     required: false
     type: string
   password:
-    description: '仓库密码或token'
+    description: "仓库密码或token"
     required: true
     type: string
+  root_dir:
+    description: "指定拉取的代码仓库存放在哪个目录下，相对于workflow运行目录的路径"
+    default: "."
+    required: false
+    type: string
   github-server-url:
-    description: '仓库域名，仅针对github仓库'
-    default: 'https://github.com'
+    description: "仓库域名，仅针对github仓库"
+    default: "https://github.com"
     required: false
     type: string
 
@@ -39,27 +44,29 @@ runs:
         echo -e "\033[33m ref：${{ inputs.ref }}\033[0m"
         echo -e "\033[33m username：${{ inputs.username }}\033[0m"
         echo -e "\033[33m password：${{ inputs.password }}\033[0m"
+        echo -e "\033[33m root_dir：${{ inputs.root_dir }}\033[0m"
       shell: bash
       
     - name: 预建仓库目录 - github仓库
       if: ${{ inputs.repo_type == 'github' }}
       run: |
-        mkdir -v code_repo
+        mkdir -pv ${{ inputs.root_dir }}/code_repo
       shell: bash
       
     - name: 拉取代码 - github仓库
       if: ${{ inputs.repo_type == 'github' }}
       uses: actions/checkout@v4.1.1
       with: 
-        github-server-url: ${{ inputs.github-server-url }}
-        repository: ${{ inputs.repository }}
-        ref: ${{ inputs.ref }}
-        token: ${{ inputs.password }}
-        path: 'code_repo'
+        github-server-url: "${{ inputs.github-server-url }}"
+        repository: "${{ inputs.repository }}"
+        ref: "${{ inputs.ref }}"
+        token: "${{ inputs.password }}"
+        path: "${{ inputs.root_dir }}/code_repo"
       
     - name: 拷贝代码文件 - github仓库
-      if: ${{ inputs.repo_type == 'github' }}
+      if: ${{ inputs.repo_type == "github" }}
       run: |
+        cd ${{ inputs.root_dir }}
         mv code_repo/* ./
         rm -rf code_repo
       shell: bash
@@ -67,6 +74,7 @@ runs:
     - name: 拉取代码 - svn仓库
       if: ${{ inputs.repo_type == 'svn' }}
       run: |
+        mkdir -pv ${{ inputs.root_dir }} && cd ${{ inputs.root_dir }}
         svn checkout  --username ${{ inputs.username }} --password ${{ inputs.password }} --no-auth-cache ${{ inputs.repository }}/tags/${{ inputs.ref }}
         mv -f ${{ inputs.ref }}/* ${{ inputs.ref }}/.svn ./
         svn --username ${{ inputs.username }} --password ${{ inputs.password }} log && rm -rf ${{ inputs.ref }}
@@ -75,7 +83,8 @@ runs:
     - name: 拉取代码 - codeup仓库
       if: ${{ inputs.repo_type == 'codeup' }}
       run: |
-        mkdir -v code_repo && cd code_repo
+        mkdir -pv ${{ inputs.root_dir }}/code_repo
+        cd ${{ inputs.root_dir }}/code_repo
         git init
         git remote add origin https://${{ inputs.username }}:${{ inputs.password }}@${{ inputs.repository }}
         git fetch --depth=1 origin ${{ inputs.ref }} 
