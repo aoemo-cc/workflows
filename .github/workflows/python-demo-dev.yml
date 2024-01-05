@@ -168,8 +168,8 @@ jobs:
   round-off:
     name: 收尾作业
     if: ${{ !cancelled() }}
-    # needs:
-    #   - deploy
+    needs:
+      - deploy
     # runs-on: self-hosted
     runs-on: ubuntu-latest
     steps:
