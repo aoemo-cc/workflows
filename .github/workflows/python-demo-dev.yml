@@ -167,7 +167,6 @@ jobs:
     if: ${{ !cancelled() }}
     needs:
       - deploy
-    # runs-on: self-hosted
     runs-on: ubuntu-latest
     steps:
       - name: 拉取自定义的action
@@ -176,7 +175,7 @@ jobs:
       - name: 运行结果通知
         if: ${{ !cancelled() }}
         # uses的值无法使用env定义的变量，参数通过创建模板的api，动态生成
-        uses: ./python-demo-dev/.github/actions/action-notification
+        uses: ./.github/actions/action-notification
         with:
           channel_type: ${{ env.flow_channel_type }}
           send_addr: ${{ env.flow_send_addr }}
