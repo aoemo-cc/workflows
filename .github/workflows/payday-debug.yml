@@ -1,4 +1,4 @@
-name: ugameandroid-debug
+name: payday-debug
 
 on:
   workflow_dispatch:
