@@ -4,21 +4,27 @@ on:
   workflow_dispatch:
     inputs:
       ref:
-        description: '分支或标签(正式使用的时候不要给默认值)'
+        description: 'unity的分支或标签'
         required: true
+        default: "develop"
         type: string
 
 # 参数通过创建模板的api，动态生成
 env:
+  flow_pg_name: "payday"
   # <仓库名>-<环境代号>
-  flow_artifact_name: "ugameandroid-debug"
+  flow_artifact_name: "payday-debug"
   flow_env: "Debug"
   flow_language_type: ""
   flow_language_version: ""
-  flow_repository_type: "github"
-  flow_repository_address: "aoemo-cc/UGameAndroid"
-  flow_repository_user: ""
-  flow_repository_password: "${{ secrets.GH_TOKEN }}"
+  flow_android_repo_type: "github"
+  flow_android_repo_address: "aoemo-cc/UGameAndroid"
+  flow_android_repo_user: ""
+  flow_android_repo_password: "${{ secrets.GH_TOKEN }}"
+  flow_unity_repo_type: "github"
+  flow_unity_repo_address: "aoemo-cc/UGameFrame"
+  flow_unity_repo_user: ""
+  flow_unity_repo_password: "${{ secrets.GH_TOKEN }}"
   # flow_build_cmd: ""
   # flow_dependency_cmd: ""
   # flow_test_cmd: ""
@@ -34,7 +40,7 @@ jobs:
     name: 编译打包
     runs-on: ubuntu-latest
     steps:
-      - name: 创建action存放目录
+      - name: 预建目录
         run: mkdir -v actions_temp UGameAndroid UGameFrame
       - name: 拉取自定义的action
         uses: actions/checkout@v4.1.1
@@ -44,21 +50,21 @@ jobs:
       - name: 拉安卓代码
         uses: ./actions_temp/.github/actions/action-checkout
         with:
-          repo_type: "${{ env.flow_repository_type }}"
-          repository: "${{ env.flow_repository_address }}"
-          ref: "${{ inputs.ref }}"
-          username: "${{ inputs.flow_repository_user }}"
-          password: "${{ env.flow_repository_password }}"
+          repo_type: "${{ env.flow_android_repo_type }}"
+          repository: "${{ env.flow_android_repo_address }}"
+          ref: "${{ env.flow_pg_name }}"
+          username: "${{ env.flow_android_repo_user }}"
+          password: "${{ env.flow_android_repo_password }}"
           root_dir: "UGameAndroid"
           
       - name: 拉unity代码
         uses: ./actions_temp/.github/actions/action-checkout
         with:
-          repo_type: "${{ env.flow_repository_type }}"
-          repository: "${{ env.flow_repository_address }}"
+          repo_type: "${{ env.flow_unity_repo_type }}"
+          repository: "${{ env.flow_unity_repo_address }}"
           ref: "${{ inputs.ref }}"
-          username: "${{ inputs.flow_repository_user }}"
-          password: "${{ env.flow_repository_password }}"
+          username: "${{ env.flow_unity_repo_user }}"
+          password: "${{ env.flow_unity_repo_password }}"
           root_dir: "UGameFrame"
       
       - name: 验证拉取操作
@@ -75,14 +81,28 @@ jobs:
         with:
           gradle-version: 6.5
       
-      - name: gradlew打包
+      - name: Unity编译
+        uses: game-ci/unity-builder@v4.1.3
+        with:
+          # Platform that the build should target.
+          targetPlatform: Android
+          unityVersion: 2020.3.45f1
+          projectPath: UGameFrame\%pg%_UClient
+          customParameters: -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio
+          # customParameters: -batchmode -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio -quit
+          
+      - name: 验证
         run: |
-          echo -e "gradle版本：$(gradle -v)"
-          gradle assembleRelease
-          pwd && [[ -d 'app/build/outputs/apk/release' ]] && ls -t1 app/build/outputs/apk/release
+          uptime 
+          echo "启动时间"
+          ls -at1 UGameFrame/payday_UClient/
+          ls UGameFrame/payday_UClient/_ObfuscatorNameTranslation.txt
       
-      - name: 配置unity环境
-        run: echo "安装unity"
+      # - name: gradlew打包
+      #   run: |
+      #     echo -e "gradle版本：$(gradle -v)"
+      #     gradle assembleRelease
+      #     pwd && [[ -d 'app/build/outputs/apk/release' ]] && ls -t1 app/build/outputs/apk/release
     
       # - name: 上传apk
       #   uses: actions/upload-artifact@v3.1.3
@@ -96,6 +116,5 @@ jobs:
       #   with:
       #     name: json_1
       #     path: app/build/outputs/apk/release/output-metadata.json
-
-      - name: 通知
-        run: echo "我是通知操作"
+          
+          
