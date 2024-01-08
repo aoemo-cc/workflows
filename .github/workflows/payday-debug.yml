@@ -68,7 +68,17 @@ jobs:
           root_dir: "UGameFrame"
       
       - name: 验证拉取操作
-        run: pwd && ls -t1
+        run: |
+          echo "查看当前工作目录"
+          pwd && ls -t1
+          echo "查看安卓分支"
+          cd UGameAndroid
+          git remote -v && git branch
+          echo "查看unity分支"
+          cd ../UGameFrame
+          git remote -v && git branch
+          pwd && ls -t1
+          
         
       - name: 配置java环境
         uses: actions/setup-java@v3
@@ -87,7 +97,7 @@ jobs:
           # Platform that the build should target.
           targetPlatform: Android
           unityVersion: 2020.3.45f1
-          projectPath: UGameFrame\%pg%_UClient
+          projectPath: UGameFrame/${{ env.flow_pg_name }}_UClient
           customParameters: -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio
           # customParameters: -batchmode -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio -quit
           
