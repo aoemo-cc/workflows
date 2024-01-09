@@ -47,25 +47,43 @@ jobs:
         with:
           path: 'actions_temp'
           
+      # - name: 拉安卓代码
+      #   uses: ./actions_temp/.github/actions/action-checkout
+      #   with:
+      #     repo_type: "${{ env.flow_android_repo_type }}"
+      #     repository: "${{ env.flow_android_repo_address }}"
+      #     ref: "${{ env.flow_pg_name }}"
+      #     username: "${{ env.flow_android_repo_user }}"
+      #     password: "${{ env.flow_android_repo_password }}"
+      #     root_dir: "UGameAndroid"
+          
       - name: 拉安卓代码
-        uses: ./actions_temp/.github/actions/action-checkout
+        uses: actions/checkout@v4.1.1
         with:
-          repo_type: "${{ env.flow_android_repo_type }}"
-          repository: "${{ env.flow_android_repo_address }}"
-          ref: "${{ env.flow_pg_name }}"
-          username: "${{ env.flow_android_repo_user }}"
-          password: "${{ env.flow_android_repo_password }}"
-          root_dir: "UGameAndroid"
+          repository: "${{ env.flow_android_repo_type }}"
+          ref: "${{ env.flow_android_repo_address }}"
+          token: "${{ env.flow_android_repo_password }}"
+          path: "UGameAndroid"
+          
+      # - name: 拉unity代码
+      #   uses: ./actions_temp/.github/actions/action-checkout
+      #   with:
+      #     repo_type: "${{ env.flow_unity_repo_type }}"
+      #     repository: "${{ env.flow_unity_repo_address }}"
+      #     ref: "${{ inputs.ref }}"
+      #     username: "${{ env.flow_unity_repo_user }}"
+      #     password: "${{ env.flow_unity_repo_password }}"
+      #     root_dir: "UGameFrame"
           
       - name: 拉unity代码
-        uses: ./actions_temp/.github/actions/action-checkout
+        uses: actions/checkout@v4.1.1
         with:
-          repo_type: "${{ env.flow_unity_repo_type }}"
           repository: "${{ env.flow_unity_repo_address }}"
           ref: "${{ inputs.ref }}"
-          username: "${{ env.flow_unity_repo_user }}"
-          password: "${{ env.flow_unity_repo_password }}"
-          root_dir: "UGameFrame"
+          token: "${{ env.flow_unity_repo_password }}"
+          path: "UGameFrame"
+          
+
       
       - name: 验证拉取操作
         run: |
