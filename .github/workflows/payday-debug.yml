@@ -110,7 +110,7 @@ jobs:
       - name: Library缓存
         uses: actions/cache@v3.3.2
         with:
-          path: UGameFrame/payday_UClient/Library
+          path: UGameFrame/${{ env.flow_pg_name }}_UClient/Library
           key: Library-unity-${{ GITHUB.WORKFLOW }}-${{ GITHUB.RUN_NUMBER }}
           restore-keys: Library-
       - name: 清理ubuntu磁盘空间
@@ -133,8 +133,8 @@ jobs:
         run: |
           uptime 
           echo "启动时间"
-          ls -at1 UGameFrame/payday_UClient/
-          ls UGameFrame/payday_UClient/_ObfuscatorNameTranslation.txt
+          ls -at1 UGameFrame/${{ env.flow_pg_name }}_UClient/
+          ls UGameFrame/${{ env.flow_pg_name }}_UClient/_ObfuscatorNameTranslation.txt
 
       - name: 安装其他软件
         run: apt-get -y install tree
