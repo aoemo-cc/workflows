@@ -72,7 +72,7 @@ jobs:
         uses: actions/checkout@v4.1.1
         with:
           repository: "${{ env.flow_android_repo_address }}"
-          ref: "${{ env.flow_pg_name }}"
+          ref: "_account_${{ env.flow_pg_name }}"
           token: "${{ env.flow_android_repo_password }}"
           path: "UGameAndroid"
           
@@ -142,7 +142,7 @@ jobs:
           _flow_pg_name=${{ env.flow_pg_name }}
           _flow_pg_name=${_flow_pg_name^}
           echo -e "\033[33mgradle版本：$(gradle -v)\033[0m"
-          gradlew clean bundle${_flow_pg_name}Release
+          gradle clean bundle${_flow_pg_name}Release
           echo -e "\033[33m查看app/build/outputs/apk/release目录下内容\033[0m"
           pwd && [[ -d 'app/build/outputs/apk/release' ]] && ls -t1 app/build/outputs/apk/release
           
