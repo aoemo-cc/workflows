@@ -110,6 +110,13 @@ jobs:
         with:
           gradle-version: 6.5
       
+      - uses: actions/cache@v3.3.2
+        with:
+          path: UGameFrame/payday_UClient/Library
+          key: Library-unity-${{ GITHUB.WORKFLOW }}-${{ GITHUB.RUN_NUMBER }}
+          restore-keys: Library-
+      - name: 清理ubuntu磁盘空间
+        uses: jlumbroso/free-disk-space@v1.3.1
       - name: Unity编译
         uses: game-ci/unity-builder@v4.1.3
         env:
@@ -130,12 +137,25 @@ jobs:
           echo "启动时间"
           ls -at1 UGameFrame/payday_UClient/
           ls UGameFrame/payday_UClient/_ObfuscatorNameTranslation.txt
+
+      - name: 安装其他软件
+        run: apt-get -y install tree
       
-      # - name: gradlew打包
-      #   run: |
-      #     echo -e "gradle版本：$(gradle -v)"
-      #     gradle assembleRelease
-      #     pwd && [[ -d 'app/build/outputs/apk/release' ]] && ls -t1 app/build/outputs/apk/release
+      - name: gradlew打包
+        working-directory: UGameAndroid
+        run: |
+          _flow_pg_name=${{ env.flow_pg_name }}
+          _flow_pg_name=${_flow_pg_name^}
+          echo -e "\033[33mgradle版本：$(gradle -v)\033[0m"
+          gradlew clean bundle${_flow_pg_name}Release
+          echo -e "\033[33m查看app/build/outputs/apk/release目录下内容\033[0m"
+          pwd && [[ -d 'app/build/outputs/apk/release' ]] && ls -t1 app/build/outputs/apk/release
+          
+          echo -e "\033[33m打包命令：gradlew clean bundle${_flow_pg_name}Release\033[0m"
+          echo -e "\033[33m查看outputs目录全部信息\033[0m"
+          tree app/build/outputs/
+          echo -e "\033[33m查看符号表目录全部信息\033[0m"
+          tree unityLibrary/symbols
     
       # - name: 上传apk
       #   uses: actions/upload-artifact@v3.1.3
