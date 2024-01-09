@@ -74,6 +74,7 @@ jobs:
           echo "查看安卓分支"
           cd UGameAndroid
           git remote -v && git branch
+          pwd && ls -t1
           echo "查看unity分支"
           cd ../UGameFrame
           git remote -v && git branch
