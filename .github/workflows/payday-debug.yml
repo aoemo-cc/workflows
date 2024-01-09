@@ -40,6 +40,17 @@ jobs:
     name: 编译打包
     runs-on: ubuntu-latest
     steps:
+      - name: 配置java环境
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
+          
+      - name: 配置Gradle环境
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 6.5
+          
       - name: 预建目录
         run: mkdir -v actions_temp UGameAndroid UGameFrame
       - name: 拉取自定义的action
@@ -82,9 +93,7 @@ jobs:
           ref: "${{ inputs.ref }}"
           token: "${{ env.flow_unity_repo_password }}"
           path: "UGameFrame"
-          
 
-      
       - name: 验证拉取操作
         run: |
           echo "查看当前工作目录"
@@ -97,20 +106,9 @@ jobs:
           cd ../UGameFrame
           git remote -v && git branch
           pwd && ls -t1
-          
-        
-      - name: 配置java环境
-        uses: actions/setup-java@v3
-        with:
-          distribution: temurin
-          java-version: 11
-          
-      - name: 配置Gradle环境
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: 6.5
       
-      - uses: actions/cache@v3.3.2
+      - name: Library缓存
+        uses: actions/cache@v3.3.2
         with:
           path: UGameFrame/payday_UClient/Library
           key: Library-unity-${{ GITHUB.WORKFLOW }}-${{ GITHUB.RUN_NUMBER }}
