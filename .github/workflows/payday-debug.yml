@@ -113,8 +113,8 @@ jobs:
           path: UGameFrame/${{ env.flow_pg_name }}_UClient/Library
           key: Library-unity-${{ GITHUB.WORKFLOW }}-${{ GITHUB.RUN_NUMBER }}
           restore-keys: Library-
-      - name: 清理ubuntu磁盘空间
-        uses: jlumbroso/free-disk-space@v1.3.1
+      # - name: 清理ubuntu磁盘空间(非必须)
+      #   uses: jlumbroso/free-disk-space@v1.3.1
       - name: Unity编译
         uses: game-ci/unity-builder@v4.1.3
         env:
