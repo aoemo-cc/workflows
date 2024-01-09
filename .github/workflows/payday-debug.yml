@@ -60,8 +60,8 @@ jobs:
       - name: 拉安卓代码
         uses: actions/checkout@v4.1.1
         with:
-          repository: "${{ env.flow_android_repo_type }}"
-          ref: "${{ env.flow_android_repo_address }}"
+          repository: "${{ env.flow_android_repo_address }}"
+          ref: "${{ env.flow_pg_name }}"
           token: "${{ env.flow_android_repo_password }}"
           path: "UGameAndroid"
           
