@@ -142,11 +142,11 @@ jobs:
           _flow_pg_name=${{ env.flow_pg_name }}
           _flow_pg_name=${_flow_pg_name^}
           echo -e "\033[33mgradle版本：$(gradle -v)\033[0m"
-          gradle clean bundle${_flow_pg_name}Release
+          echo -e "\033[33m所在目录: $(pwd && ls)\n打包命令：gradle clean bundle${_flow_pg_name}${{ env.flow_env }}\033[0m"
+          gradle clean bundle${_flow_pg_name}${{ env.flow_env }}
           echo -e "\033[33m查看app/build/outputs/apk/release目录下内容\033[0m"
           pwd && [[ -d 'app/build/outputs/apk/release' ]] && ls -t1 app/build/outputs/apk/release
           
-          echo -e "\033[33m打包命令：gradlew clean bundle${_flow_pg_name}Release\033[0m"
           echo -e "\033[33m查看outputs目录全部信息\033[0m"
           tree app/build/outputs/
           echo -e "\033[33m查看符号表目录全部信息\033[0m"
