@@ -137,8 +137,10 @@ jobs:
           ls UGameFrame/${{ env.flow_pg_name }}_UClient/_ObfuscatorNameTranslation.txt
       
       - name: gradlew打包
+        shell: sh
         working-directory: UGameAndroid
         run: |
+          echo $SHELL
           ls -l ./gradlew
           chmod +x ./gradlew
           ls -l ./gradlew
