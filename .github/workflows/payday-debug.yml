@@ -137,22 +137,25 @@ jobs:
           ls UGameFrame/${{ env.flow_pg_name }}_UClient/_ObfuscatorNameTranslation.txt
       
       - name: gradlew打包
-        shell: sh
+        # shell: sh
         working-directory: UGameAndroid
         run: |
           echo $SHELL
+          ps -p $$ -o cmd=
           ls -l ./gradlew
           chmod +x ./gradlew
           ls -l ./gradlew
           _flow_pg_name=${{ env.flow_pg_name }}
           _flow_pg_name=${_flow_pg_name^}
+          # _flow_pg_name=$(echo "${_flow_pg_name}" | awk '{print toupper(substr($0,1,1))substr($0,2)}')
           echo -e "\033[33mgradle版本：$(gradle -v)\033[0m"
           echo -e "\033[33m执行 ./gradlew clean\033[0m"
-          ./gradlew clean
+          bash ./gradlew clean
           echo -e "\033[33m所在目录: $(pwd && ls)\n打包命令：./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}\033[0m"
-          ./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}
+          bash ./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}
           echo -e "\033[33m查看app/build/outputs/apk/release目录下内容\033[0m"
           pwd && [[ -d 'app/build/outputs/apk/release' ]] && ls -t1 app/build/outputs/apk/release
+          # pwd && [ -d 'app/build/outputs/apk/release' ] && ls -t1 app/build/outputs/apk/release
           
           echo -e "\033[33m查看outputs目录全部信息\033[0m"
           tree app/build/outputs/
