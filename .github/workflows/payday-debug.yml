@@ -117,11 +117,11 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
-          # Platform that the build should target.
           targetPlatform: Android
           unityVersion: 2020.3.45f1
           projectPath: UGameFrame/${{ env.flow_pg_name }}_UClient
-          customParameters: -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio
+          buildMethod: BuildProjectApkClientTool.BuildUnitySyncAndroidStudio
+          # customParameters: -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio
           # customParameters: -batchmode -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio -quit
           
       - name: 验证
