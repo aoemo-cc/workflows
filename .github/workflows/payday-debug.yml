@@ -40,11 +40,8 @@ jobs:
     name: 编译打包
     runs-on: ubuntu-latest
     steps:
-      - name: Start SSH
-        uses: Tofandel/ssh-server-action@v1.0.0
-        with:
-          user_name: aoemo
-          user_password: 20210506..hA
+      - name: Safe Action Debugger
+        uses: tete1030/safe-debugger-action@v1.01
     
       # - name: 配置ndk环境
       #   uses: nttld/setup-ndk@v1.4.2
