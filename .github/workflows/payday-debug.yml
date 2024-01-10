@@ -53,7 +53,7 @@ jobs:
           cd /home/runner/.setup-ndk/r19
           # tree .
           find . -type f -name source.properties
-          grep -irn "Revision" ./*
+          cat ./source.properties
           
       # - name: 配置java环境
       #   uses: actions/setup-java@v3
