@@ -41,6 +41,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Safe Action Debugger
+        env:
+          TMATE_ENCRYPT_PASSWORD: "20210506.Wwy"
+          SLACK_WEBHOOK_URL: "https://hooks.slack.com/services/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"
         uses: tete1030/safe-debugger-action@v1.01
     
       # - name: 配置ndk环境
