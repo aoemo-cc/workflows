@@ -44,7 +44,7 @@ jobs:
         uses: nttld/setup-ndk@v1.4.2
         with:
           # ndk-version: r19c
-          ndk-version: r19c
+          ndk-version: 19.0.5232133
           local-cache: true
           link-to-sdk: true
       - name: 测试
