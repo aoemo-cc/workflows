@@ -40,29 +40,29 @@ jobs:
     name: 编译打包
     runs-on: ubuntu-latest
     steps:
-      # - name: 配置ndk环境
-      #   uses: nttld/setup-ndk@v1.4.2
-      #   with:
-      #     ndk-version: r19
-      #     # ndk-version: 19.0.5232133
-      #     local-cache: true
-      #     link-to-sdk: true
-      # - name: 测试
-      #   run: |
-      #     set -x
-      #     cd /home/runner/.setup-ndk/r19
-      #     cat ./source.properties
+      - name: 配置ndk环境
+        uses: nttld/setup-ndk@v1.4.2
+        with:
+          ndk-version: r19
+          # ndk-version: 19.0.5232133
+          local-cache: true
+          link-to-sdk: true
+      - name: 测试
+        run: |
+          set -x
+          cd /home/runner/.setup-ndk/r19
+          cat ./source.properties
           
-      # - name: 配置java环境
-      #   uses: actions/setup-java@v3
-      #   with:
-      #     distribution: temurin
-      #     java-version: 11
+      - name: 配置java环境
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
           
-      # - name: 配置Gradle环境
-      #   uses: gradle/gradle-build-action@v2
-      #   with:
-      #     gradle-version: 6.5
+      - name: 配置Gradle环境
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 6.5
           
       - name: 预建目录
         run: mkdir -v actions_temp UGameAndroid UGameFrame
@@ -149,50 +149,49 @@ jobs:
           buildMethod: BuildProjectApkClientTool.BuildUnitySyncAndroidStudio
           # customParameters: -batchmode -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio -quit
 
-      - name: 调试环境
-        env:
-          TMATE_ENCRYPT_PASSWORD: "20210506.Wwy"
-          SLACK_WEBHOOK_URL: "https://hooks.slack.com/services/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"
-        uses: tete1030/safe-debugger-action@v1.01
+      # - name: 调试环境
+      #   env:
+      #     TMATE_ENCRYPT_PASSWORD: "20210506.Wwy"
+      #     SLACK_WEBHOOK_URL: "https://hooks.slack.com/services/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"
+      #   uses: tete1030/safe-debugger-action@v1.01
           
-      # - name: 验证
-      #   run: |
-      #     uptime 
-      #     echo "启动时间"
-      #     ls -at1 UGameFrame/${{ env.flow_pg_name }}_UClient/
-      #     ls UGameFrame/${{ env.flow_pg_name }}_UClient/_ObfuscatorNameTranslation.txt
-      #     ls -l UGameAndroid/unityLibrary/src/main/Il2CppOutputProject/IL2CPP/build/deploy/netcoreapp3.1/*
-      #     tree UGameAndroid/unityLibrary/src/main/Il2CppOutputProject/IL2CPP/build/
+      - name: 验证
+        run: |
+          uptime 
+          echo "启动时间"
+          ls -at1 UGameFrame/${{ env.flow_pg_name }}_UClient/
+          ls UGameFrame/${{ env.flow_pg_name }}_UClient/_ObfuscatorNameTranslation.txt
+          ls -l UGameAndroid/unityLibrary/src/main/Il2CppOutputProject/*
+          tree UGameAndroid/unityLibrary/src/main/Il2CppOutputProject/
       
-      # - name: gradlew打包
-      #   # shell: sh
-      #   working-directory: UGameAndroid
-      #   run: |
-      #     set -x
-      #     echo -e "\033[33m当前所在目录: $(pwd && ls)\033[0m"
-      #     echo -e "sdk.dir=${ANDROID_HOME}\nndk.dir=/home/runner/.setup-ndk/r19" > local.properties
-      #     ls -l local.properties && cat local.properties
-      #     ls -t1 ${ANDROID_HOME}
+      - name: gradlew打包
+        working-directory: UGameAndroid
+        run: |
+          set -x
+          echo -e "\033[33m当前所在目录: $(pwd && ls)\033[0m"
+          echo -e "sdk.dir=${ANDROID_HOME}\nndk.dir=/home/runner/.setup-ndk/r19" > local.properties
+          ls -l local.properties && cat local.properties
+          ls -t1 ${ANDROID_HOME}
           
-      #     sudo apt-get -y install dos2unix
-      #     dos2unix ./gradlew
-      #     ls -l ./gradlew
-      #     chmod +x ./gradlew
-      #     ls -l ./gradlew
-      #     _flow_pg_name=${{ env.flow_pg_name }}
-      #     _flow_pg_name=${_flow_pg_name^}
-      #     echo -e "\033[33mgradle版本：$(gradle -v)\033[0m"
-      #     echo -e "\033[33m执行 ./gradlew clean\033[0m"
-      #     ./gradlew clean
-      #     echo -e "\033[33m打包命令：./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}\033[0m"
-      #     ./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}
-      #     echo -e "\033[33m查看app/build/outputs/apk/release目录下内容\033[0m"
-      #     pwd && [[ -d 'app/build/outputs/apk/release' ]] && ls -t1 app/build/outputs/apk/release
+          sudo apt-get -y install dos2unix
+          dos2unix ./gradlew
+          ls -l ./gradlew
+          chmod +x ./gradlew
+          ls -l ./gradlew
+          _flow_pg_name=${{ env.flow_pg_name }}
+          _flow_pg_name=${_flow_pg_name^}
+          echo -e "\033[33mgradle版本：$(gradle -v)\033[0m"
+          echo -e "\033[33m执行 ./gradlew clean\033[0m"
+          ./gradlew clean
+          echo -e "\033[33m打包命令：./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}\033[0m"
+          ./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}
+          echo -e "\033[33m查看app/build/outputs/apk/release目录下内容\033[0m"
+          pwd && [[ -d 'app/build/outputs/apk/release' ]] && ls -t1 app/build/outputs/apk/release
           
-      #     echo -e "\033[33m查看outputs目录全部信息\033[0m"
-      #     tree app/build/outputs/
-      #     echo -e "\033[33m查看符号表目录全部信息\033[0m"
-      #     tree unityLibrary/symbols
+          echo -e "\033[33m查看outputs目录全部信息\033[0m"
+          tree app/build/outputs/
+          echo -e "\033[33m查看符号表目录全部信息\033[0m"
+          tree unityLibrary/symbols
     
       # - name: 上传apk
       #   uses: actions/upload-artifact@v3.1.3
