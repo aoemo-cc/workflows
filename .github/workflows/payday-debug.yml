@@ -50,7 +50,7 @@ jobs:
       - name: 测试
         run: |
           set -x
-          cd /home/runner/.setup-ndk/r19c
+          cd /home/runner/.setup-ndk/r19
           # tree .
           find . -type f -name source.properties
           grep -irn "Revision" ./*
