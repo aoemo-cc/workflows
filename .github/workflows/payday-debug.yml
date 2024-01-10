@@ -155,8 +155,10 @@ jobs:
         # shell: sh
         working-directory: UGameAndroid
         run: |
-          echo -e "sdk.dir=\$ANDROID_HOME\nndk.dir=/home/runner/.setup-ndk/r19c" > local.properties
+          set -x
+          echo -e "sdk.dir=${ANDROID_HOME}\nndk.dir=/home/runner/.setup-ndk/r19c" > local.properties
           ls -l local.properties && cat local.properties
+          ls -t1 /home/runner/.setup-ndk/r19c/
           sudo apt-get -y install dos2unix
           dos2unix ./gradlew
           ls -l ./gradlew
