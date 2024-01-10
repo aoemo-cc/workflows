@@ -147,7 +147,6 @@ jobs:
           unityVersion: 2020.3.45f1
           projectPath: UGameFrame/${{ env.flow_pg_name }}_UClient
           buildMethod: BuildProjectApkClientTool.BuildUnitySyncAndroidStudio
-          customParameters: -buildTarget LinuxIL2CPP
           # customParameters: -batchmode -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio -quit
           
       - name: 验证
@@ -157,6 +156,7 @@ jobs:
           ls -at1 UGameFrame/${{ env.flow_pg_name }}_UClient/
           ls UGameFrame/${{ env.flow_pg_name }}_UClient/_ObfuscatorNameTranslation.txt
           ls -l UGameAndroid/unityLibrary/src/main/Il2CppOutputProject/IL2CPP/build/deploy/netcoreapp3.1/*
+          tree UGameAndroid/unityLibrary/src/main/Il2CppOutputProject/IL2CPP/build/
       
       # - name: gradlew打包
       #   # shell: sh
