@@ -115,7 +115,11 @@ jobs:
           restore-keys: Library-
       - name: 解决git分支非最新导致错误
         working-directory: UGameFrame
-        run: git add -A && git commit -m "编译临时使用"
+        run: |
+          git config --global user.name 'liuming'
+          git config --global user.email 'liuming@aoemo.com'
+          git add -A
+          git commit -m "workflow编译临时使用"
       # - name: 清理ubuntu磁盘空间(非必须)
       #   uses: jlumbroso/free-disk-space@v1.3.1
       - name: Unity编译
