@@ -43,13 +43,8 @@ jobs:
       - name: Start SSH
         uses: Tofandel/ssh-server-action@v1.0.0
         with:
-          hostname: dev.com # Optional, the display hostname of the server
-          port: 2222 # Optional, default value is 22. The exposed ssh port
           user_name: aoemo
           user_password: 20210506..hA
-          sudo_access: true # Optional, allow user to use sudo without password, default: false
-          # public_key: $PUBLIC_KEY # Optional, Public key authorized to access the server
-          # public_key_url: https://github.com/${{ github.actor }}.keys # Optional, url to retrieve the public key
     
       # - name: 配置ndk环境
       #   uses: nttld/setup-ndk@v1.4.2
