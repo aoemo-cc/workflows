@@ -40,12 +40,6 @@ jobs:
     name: 编译打包
     runs-on: ubuntu-latest
     steps:
-      - name: Safe Action Debugger
-        env:
-          TMATE_ENCRYPT_PASSWORD: "20210506.Wwy"
-          SLACK_WEBHOOK_URL: "https://hooks.slack.com/services/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"
-        uses: tete1030/safe-debugger-action@v1.01
-    
       # - name: 配置ndk环境
       #   uses: nttld/setup-ndk@v1.4.2
       #   with:
@@ -70,90 +64,96 @@ jobs:
       #   with:
       #     gradle-version: 6.5
           
-      # - name: 预建目录
-      #   run: mkdir -v actions_temp UGameAndroid UGameFrame
-      # - name: 拉取自定义的action
-      #   uses: actions/checkout@v4.1.1
-      #   with:
-      #     path: 'actions_temp'
-          
-      # # - name: 拉安卓代码
-      # #   uses: ./actions_temp/.github/actions/action-checkout
-      # #   with:
-      # #     repo_type: "${{ env.flow_android_repo_type }}"
-      # #     repository: "${{ env.flow_android_repo_address }}"
-      # #     ref: "${{ env.flow_pg_name }}"
-      # #     username: "${{ env.flow_android_repo_user }}"
-      # #     password: "${{ env.flow_android_repo_password }}"
-      # #     root_dir: "UGameAndroid"
+      - name: 预建目录
+        run: mkdir -v actions_temp UGameAndroid UGameFrame
+      - name: 拉取自定义的action
+        uses: actions/checkout@v4.1.1
+        with:
+          path: 'actions_temp'
           
       # - name: 拉安卓代码
-      #   uses: actions/checkout@v4.1.1
+      #   uses: ./actions_temp/.github/actions/action-checkout
       #   with:
+      #     repo_type: "${{ env.flow_android_repo_type }}"
       #     repository: "${{ env.flow_android_repo_address }}"
-      #     ref: "_account_${{ env.flow_pg_name }}"
-      #     token: "${{ env.flow_android_repo_password }}"
-      #     path: "UGameAndroid"
+      #     ref: "${{ env.flow_pg_name }}"
+      #     username: "${{ env.flow_android_repo_user }}"
+      #     password: "${{ env.flow_android_repo_password }}"
+      #     root_dir: "UGameAndroid"
           
-      # # - name: 拉unity代码
-      # #   uses: ./actions_temp/.github/actions/action-checkout
-      # #   with:
-      # #     repo_type: "${{ env.flow_unity_repo_type }}"
-      # #     repository: "${{ env.flow_unity_repo_address }}"
-      # #     ref: "${{ inputs.ref }}"
-      # #     username: "${{ env.flow_unity_repo_user }}"
-      # #     password: "${{ env.flow_unity_repo_password }}"
-      # #     root_dir: "UGameFrame"
+      - name: 拉安卓代码
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: "${{ env.flow_android_repo_address }}"
+          ref: "_account_${{ env.flow_pg_name }}"
+          token: "${{ env.flow_android_repo_password }}"
+          path: "UGameAndroid"
           
       # - name: 拉unity代码
-      #   uses: actions/checkout@v4.1.1
+      #   uses: ./actions_temp/.github/actions/action-checkout
       #   with:
+      #     repo_type: "${{ env.flow_unity_repo_type }}"
       #     repository: "${{ env.flow_unity_repo_address }}"
       #     ref: "${{ inputs.ref }}"
-      #     token: "${{ env.flow_unity_repo_password }}"
-      #     path: "UGameFrame"
+      #     username: "${{ env.flow_unity_repo_user }}"
+      #     password: "${{ env.flow_unity_repo_password }}"
+      #     root_dir: "UGameFrame"
+          
+      - name: 拉unity代码
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: "${{ env.flow_unity_repo_address }}"
+          ref: "${{ inputs.ref }}"
+          token: "${{ env.flow_unity_repo_password }}"
+          path: "UGameFrame"
 
-      # - name: 验证拉取操作
-      #   run: |
-      #     echo "查看当前工作目录"
-      #     pwd && ls -t1
-      #     echo "查看安卓分支"
-      #     cd UGameAndroid
-      #     git remote -v && git branch
-      #     pwd && ls -t1
-      #     ls -l /home/runner/work/workflows/workflows/UGameAndroid/app/src/payday/*
-      #     echo "查看unity分支"
-      #     cd ../UGameFrame
-      #     git remote -v && git branch
-      #     pwd && ls -t1
+      - name: 验证拉取操作
+        run: |
+          echo "查看当前工作目录"
+          pwd && ls -t1
+          echo "查看安卓分支"
+          cd UGameAndroid
+          git remote -v && git branch
+          pwd && ls -t1
+          ls -l /home/runner/work/workflows/workflows/UGameAndroid/app/src/payday/*
+          echo "查看unity分支"
+          cd ../UGameFrame
+          git remote -v && git branch
+          pwd && ls -t1
       
-      # - name: Library缓存
-      #   uses: actions/cache@v3.3.2
-      #   with:
-      #     path: UGameFrame/${{ env.flow_pg_name }}_UClient/Library
-      #     key: Library-unity-${{ GITHUB.WORKFLOW }}-${{ GITHUB.RUN_NUMBER }}
-      #     restore-keys: Library-
-      # - name: 解决git分支非最新导致错误
-      #   working-directory: UGameFrame
-      #   run: |
-      #     git config --global user.name 'liuming'
-      #     git config --global user.email 'liuming@aoemo.com'
-      #     git add -A
-      #     git commit -m "workflow编译临时使用"
-      # # - name: 清理ubuntu磁盘空间(非必须)
-      # #   uses: jlumbroso/free-disk-space@v1.3.1
-      # - name: Unity编译
-      #   uses: game-ci/unity-builder@v4.1.3
-      #   env:
-      #     UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-      #     UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-      #     UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-      #   with:
-      #     targetPlatform: Android
-      #     unityVersion: 2020.3.45f1
-      #     projectPath: UGameFrame/${{ env.flow_pg_name }}_UClient
-      #     buildMethod: BuildProjectApkClientTool.BuildUnitySyncAndroidStudio
-      #     # customParameters: -batchmode -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio -quit
+      - name: Library缓存
+        uses: actions/cache@v3.3.2
+        with:
+          path: UGameFrame/${{ env.flow_pg_name }}_UClient/Library
+          key: Library-unity-${{ GITHUB.WORKFLOW }}-${{ GITHUB.RUN_NUMBER }}
+          restore-keys: Library-
+      - name: 解决git分支非最新导致错误
+        working-directory: UGameFrame
+        run: |
+          git config --global user.name 'liuming'
+          git config --global user.email 'liuming@aoemo.com'
+          git add -A
+          git commit -m "workflow编译临时使用"
+      # - name: 清理ubuntu磁盘空间(非必须)
+      #   uses: jlumbroso/free-disk-space@v1.3.1
+      - name: Unity编译
+        uses: game-ci/unity-builder@v4.1.3
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          targetPlatform: Android
+          unityVersion: 2020.3.45f1
+          projectPath: UGameFrame/${{ env.flow_pg_name }}_UClient
+          buildMethod: BuildProjectApkClientTool.BuildUnitySyncAndroidStudio
+          # customParameters: -batchmode -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio -quit
+
+      - name: 调试环境
+        env:
+          TMATE_ENCRYPT_PASSWORD: "20210506.Wwy"
+          SLACK_WEBHOOK_URL: "https://hooks.slack.com/services/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"
+        uses: tete1030/safe-debugger-action@v1.01
           
       # - name: 验证
       #   run: |
