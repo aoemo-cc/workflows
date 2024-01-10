@@ -113,6 +113,9 @@ jobs:
           path: UGameFrame/${{ env.flow_pg_name }}_UClient/Library
           key: Library-unity-${{ GITHUB.WORKFLOW }}-${{ GITHUB.RUN_NUMBER }}
           restore-keys: Library-
+      - name: 解决git分支非最新导致错误
+        working-directory: UGameFrame
+        run: git add -A && git commit -m "编译临时使用"
       # - name: 清理ubuntu磁盘空间(非必须)
       #   uses: jlumbroso/free-disk-space@v1.3.1
       - name: Unity编译
@@ -155,10 +158,10 @@ jobs:
           echo -e "\033[33m查看app/build/outputs/apk/release目录下内容\033[0m"
           pwd && [[ -d 'app/build/outputs/apk/release' ]] && ls -t1 app/build/outputs/apk/release
           
-      #     echo -e "\033[33m查看outputs目录全部信息\033[0m"
-      #     tree app/build/outputs/
-      #     echo -e "\033[33m查看符号表目录全部信息\033[0m"
-      #     tree unityLibrary/symbols
+          echo -e "\033[33m查看outputs目录全部信息\033[0m"
+          tree app/build/outputs/
+          echo -e "\033[33m查看符号表目录全部信息\033[0m"
+          tree unityLibrary/symbols
     
       # - name: 上传apk
       #   uses: actions/upload-artifact@v3.1.3
