@@ -157,7 +157,8 @@ jobs:
           echo -e "\033[33mgradle版本：$(gradle -v)\033[0m"
           echo -e "\033[33m执行 ./gradlew clean\033[0m"
           ./gradlew clean
-          echo -e "\033[33m所在目录: $(pwd && ls)\n打包命令：./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}\033[0m"
+          echo -e "\033[33m所在目录: $(pwd && ls)\033[0m"
+          echo -e "\033[33m打包命令：./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}\033[0m"
           ./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}
           echo -e "\033[33m查看app/build/outputs/apk/release目录下内容\033[0m"
           pwd && [[ -d 'app/build/outputs/apk/release' ]] && ls -t1 app/build/outputs/apk/release
