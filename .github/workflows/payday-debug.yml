@@ -47,11 +47,11 @@ jobs:
       #     # ndk-version: 19.0.5232133
       #     local-cache: true
       #     link-to-sdk: true
-      - name: 测试
-        run: |
-          set -x
-          cd /home/runner/.setup-ndk/r19
-          cat ./source.properties
+      # - name: 测试
+      #   run: |
+      #     set -x
+      #     cd /home/runner/.setup-ndk/r19
+      #     cat ./source.properties
           
       - name: 配置java环境
         uses: actions/setup-java@v3
