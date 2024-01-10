@@ -43,11 +43,14 @@ jobs:
       - name: 配置ndk环境
         uses: nttld/setup-ndk@v1.4.2
         with:
+          # ndk-version: r19c
           ndk-version: r19c
           local-cache: true
           link-to-sdk: true
       - name: 测试
-        run: /home/runner/.setup-ndk/r19c/ndk-build 
+        run: |
+          tree /home/runner/.setup-ndk/r19c
+          cat /home/runner/.setup-ndk/r19c/source.properties
           
       # - name: 配置java环境
       #   uses: actions/setup-java@v3
