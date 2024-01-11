@@ -47,7 +47,7 @@ jobs:
           Set-PSDebug -Trace 1
           git config --global user.name 'liuming'
           git config --global user.email 'liuming@aoemo.com'
-          git add -A && git commit -m "workflow编译临时使用" || Write-Output "没有缓存，无需git提交" -ForegroundColor Yellow
+          git add -A && git commit -m "workflow编译临时使用" || Write-Output "没有缓存，无需git提交" -ForegroundColor Yellow || true
           # try {
           #     git config --global user.name 'liuming'
           #     git config --global user.email 'liuming@aoemo.com'
