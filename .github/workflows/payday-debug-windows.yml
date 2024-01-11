@@ -108,7 +108,7 @@ jobs:
           ls
       
       - name: 清理旧Unity资源
-        working-directory: UGameFrame
+        working-directory: UGameAndroid
         run: |
           Set-PSDebug -Trace 1
           Remove-Item -Path "unityLibrary\*" -ErrorAction SilentlyContinue -Force -Recurse
