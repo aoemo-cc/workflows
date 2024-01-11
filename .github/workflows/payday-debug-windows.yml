@@ -52,9 +52,11 @@ jobs:
         shell: bash
         run: |
           set -x
+          pwd
           echo -e "\033[33m安装目录：${{ steps.setup-ndk.outputs.ndk-path }}\033[0m"
-          cd ${{ steps.setup-ndk.outputs.ndk-path }}
-          cat ./source.properties
+          ls -l
+          # cd ${{ steps.setup-ndk.outputs.ndk-path }}
+          # cat ./source.properties
            
           
       # - name: 配置java环境
