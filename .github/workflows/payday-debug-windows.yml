@@ -45,18 +45,21 @@ jobs:
         shell: pwsh
         run: |
           Set-PSDebug -Trace 1
-          try {
-              git config --global user.name 'liuming'
-              git config --global user.email 'liuming@aoemo.com'
-              git add -A
-              if ($LASTEXITCODE -eq 0) {
-                  git commit -m "workflow编译临时使用"
-              }
-          }
-          catch {
-              Write-Output "没有缓存，无需git提交" -ForegroundColor Yellow
-              $error[0] | Out-String
-          }
+          git config --global user.name 'liuming'
+          git config --global user.email 'liuming@aoemo.com'
+          git add -A && git commit -m "workflow编译临时使用" || Write-Output "没有缓存，无需git提交" -ForegroundColor Yellow
+          # try {
+          #     git config --global user.name 'liuming'
+          #     git config --global user.email 'liuming@aoemo.com'
+          #     git add -A
+          #     if ($LASTEXITCODE -eq 0) {
+          #         git commit -m "workflow编译临时使用"
+          #     }
+          # }
+          # catch {
+          #     Write-Output "没有缓存，无需git提交" -ForegroundColor Yellow
+          #     $error[0] | Out-String
+          # }
       - name: 测试
         run: echo "Hello world"
         
