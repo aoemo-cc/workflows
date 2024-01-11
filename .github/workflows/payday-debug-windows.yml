@@ -52,8 +52,9 @@ jobs:
         run: |
           Set-PSDebug -Trace 1
           Write-Host "当前路径: $(pwd)" -ForegroundColor Yellow
-          echo -e "\033[33m安装目录：${{ steps.setup-ndk.outputs.ndk-path }}\033[0m"
+          Write-Host "安装目录：${{ steps.setup-ndk.outputs.ndk-path }}" -ForegroundColor Yellow
           cd ${{ steps.setup-ndk.outputs.ndk-path }}
+          Write-Host "新的当前路径: $(pwd)" -ForegroundColor Yellow
           ls
           cat ./source.properties
           # Remove-Item -Path ".\hello.txt" -ErrorAction SilentlyContinue
