@@ -152,10 +152,15 @@ jobs:
         working-directory: UGameFrame
         run: |
           Set-PSDebug -Trace 1
-          git config --global user.name 'liuming'
-          git config --global user.email 'liuming@aoemo.com'
-          git add -A
-          git commit -m "workflow编译临时使用"
+          try {
+              git config --global user.name 'liuming'
+              git config --global user.email 'liuming@aoemo.com'
+              git add -A
+              git commit -m "workflow编译临时使用"
+          }
+          catch {
+              Write-Output "没有缓存，无需git提交" -ForegroundColor Yellow
+          }
       # - name: 清理ubuntu磁盘空间(非必须)
       #   uses: jlumbroso/free-disk-space@v1.3.1
       - name: Unity编译
