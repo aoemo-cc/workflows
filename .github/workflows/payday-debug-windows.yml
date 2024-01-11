@@ -1,4 +1,4 @@
-name: payday-debug
+name: payday-debug-windows
 
 on:
   workflow_dispatch:
