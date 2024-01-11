@@ -207,7 +207,7 @@ jobs:
           (Get-Acl "gradlew").Access
           ls ./gradlew
           
-          $_flow_pg_name = ${{ env.flow_pg_name }}
+          $_flow_pg_name = "${{ env.flow_pg_name }}"
           $_flow_pg_name = $_flow_pg_name.Substring(0,1).ToUpper() + $_flow_pg_name.Substring(1)
           Write-Host "执行 ./gradlew clean" -ForegroundColor Yellow
           ./gradlew clean
