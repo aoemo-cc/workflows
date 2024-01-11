@@ -89,6 +89,10 @@ jobs:
           ref: "_account_${{ env.flow_pg_name }}"
           token: "${{ env.flow_android_repo_password }}"
           path: "UGameAndroid"
+          
+      - name: 清理旧Unity资源
+        working-directory: UGameFrame
+        run: rm -rf unityLibrary/*
 
       - name: 验证拉取操作
         run: |
