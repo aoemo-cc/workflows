@@ -155,55 +155,55 @@ jobs:
           customParameters: -batchmode -quit
           # customParameters: -batchmode -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio -quit
 
-      # - name: 调试环境
-      #   env:
-      #     TMATE_ENCRYPT_PASSWORD: ${{secrets.TMATE_ENCRYPT_PASSWORD}}
-      #     SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
-      #   uses: tete1030/safe-debugger-action@v1.01
+      - name: 调试环境
+        env:
+          TMATE_ENCRYPT_PASSWORD: ${{secrets.TMATE_ENCRYPT_PASSWORD}}
+          SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
+        uses: tete1030/safe-debugger-action@v1.01
           
-      - name: 验证
-        run: |
-          uptime 
-          echo "启动时间"
-          ls -at1 UGameFrame/${{ env.flow_pg_name }}_UClient/
-          ls UGameFrame/${{ env.flow_pg_name }}_UClient/_ObfuscatorNameTranslation.txt
-          ls -l UGameAndroid/unityLibrary/src/main/Il2CppOutputProject/*
-          tree UGameAndroid/unityLibrary/src/main/Il2CppOutputProject/
+      # - name: 验证
+      #   run: |
+      #     uptime 
+      #     echo "启动时间"
+      #     ls -at1 UGameFrame/${{ env.flow_pg_name }}_UClient/
+      #     ls UGameFrame/${{ env.flow_pg_name }}_UClient/_ObfuscatorNameTranslation.txt
+      #     ls -l UGameAndroid/unityLibrary/src/main/Il2CppOutputProject/*
+      #     tree UGameAndroid/unityLibrary/src/main/Il2CppOutputProject/
 
-      - name: 替换build.gradle内容
-        run: |
-          set -x 
-          grep -q 'il2cpp.exe' UGameAndroid/unityLibrary/build.gradle && sed -i 's/il2cpp.exe/il2cpp/' UGameAndroid/unityLibrary/build.gradle
-          cat UGameAndroid/unityLibrary/build.gradle
+      # - name: 替换build.gradle内容
+      #   run: |
+      #     set -x 
+      #     grep -q 'il2cpp.exe' UGameAndroid/unityLibrary/build.gradle && sed -i 's/il2cpp.exe/il2cpp/' UGameAndroid/unityLibrary/build.gradle
+      #     cat UGameAndroid/unityLibrary/build.gradle
           
-      - name: gradlew打包
-        working-directory: UGameAndroid
-        run: |
-          set -x
-          echo -e "\033[33m当前所在目录: $(pwd && ls)\033[0m"
-          echo -e "sdk.dir=${ANDROID_HOME}\nndk.dir=/home/runner/.setup-ndk/r19" > local.properties
-          ls -l local.properties && cat local.properties
-          ls -t1 ${ANDROID_HOME}
+      # - name: gradlew打包
+      #   working-directory: UGameAndroid
+      #   run: |
+      #     set -x
+      #     echo -e "\033[33m当前所在目录: $(pwd && ls)\033[0m"
+      #     echo -e "sdk.dir=${ANDROID_HOME}\nndk.dir=/home/runner/.setup-ndk/r19" > local.properties
+      #     ls -l local.properties && cat local.properties
+      #     ls -t1 ${ANDROID_HOME}
           
-          sudo apt-get -y install dos2unix
-          dos2unix ./gradlew
-          ls -l ./gradlew
-          chmod +x ./gradlew
-          ls -l ./gradlew
-          _flow_pg_name=${{ env.flow_pg_name }}
-          _flow_pg_name=${_flow_pg_name^}
-          echo -e "\033[33mgradle版本：$(gradle -v)\033[0m"
-          echo -e "\033[33m执行 ./gradlew clean\033[0m"
-          ./gradlew clean
-          echo -e "\033[33m打包命令：./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}\033[0m"
-          ./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}
-          echo -e "\033[33m查看app/build/outputs/apk/release目录下内容\033[0m"
-          pwd && [[ -d 'app/build/outputs/apk/release' ]] && ls -t1 app/build/outputs/apk/release
+      #     sudo apt-get -y install dos2unix
+      #     dos2unix ./gradlew
+      #     ls -l ./gradlew
+      #     chmod +x ./gradlew
+      #     ls -l ./gradlew
+      #     _flow_pg_name=${{ env.flow_pg_name }}
+      #     _flow_pg_name=${_flow_pg_name^}
+      #     echo -e "\033[33mgradle版本：$(gradle -v)\033[0m"
+      #     echo -e "\033[33m执行 ./gradlew clean\033[0m"
+      #     ./gradlew clean
+      #     echo -e "\033[33m打包命令：./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}\033[0m"
+      #     ./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}
+      #     echo -e "\033[33m查看app/build/outputs/apk/release目录下内容\033[0m"
+      #     pwd && [[ -d 'app/build/outputs/apk/release' ]] && ls -t1 app/build/outputs/apk/release
           
-          echo -e "\033[33m查看outputs目录全部信息\033[0m"
-          tree app/build/outputs/
-          echo -e "\033[33m查看符号表目录全部信息\033[0m"
-          tree unityLibrary/symbols
+      #     echo -e "\033[33m查看outputs目录全部信息\033[0m"
+      #     tree app/build/outputs/
+      #     echo -e "\033[33m查看符号表目录全部信息\033[0m"
+      #     tree unityLibrary/symbols
     
       # - name: 上传apk
       #   uses: actions/upload-artifact@v3.1.3
