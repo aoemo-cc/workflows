@@ -43,7 +43,6 @@ jobs:
     steps:
       - name: 解决git分支非最新导致错误
         shell: pwsh
-        working-directory: UGameFrame
         run: |
           Set-PSDebug -Trace 1
           try {
@@ -58,6 +57,9 @@ jobs:
               Write-Output "没有缓存，无需git提交" -ForegroundColor Yellow
               $error[0] | Out-String
           }
+      - name: 测试
+        run: echo "Hello world"
+        
       # - name: 配置ndk环境
       #   id: setup-ndk
       #   uses: nttld/setup-ndk@v1.4.2
