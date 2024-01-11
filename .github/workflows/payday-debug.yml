@@ -89,6 +89,15 @@ jobs:
       #     ref: "_account_${{ env.flow_pg_name }}"
       #     token: "${{ env.flow_android_repo_password }}"
       #     path: "UGameAndroid"
+
+      # - name: 验证拉取操作
+      #   run: |
+      #     echo "查看当前工作目录"
+      #     pwd && ls -t1
+      #     echo "查看安卓分支"
+      #     cd UGameAndroid
+      #     git remote -v && git branch
+      #     pwd && ls -t1
           
       # # - name: 拉unity代码
       # #   uses: ./actions_temp/.github/actions/action-checkout
@@ -112,12 +121,9 @@ jobs:
         run: |
           echo "查看当前工作目录"
           pwd && ls -t1
-          echo "查看安卓分支"
-          cd UGameAndroid
-          git remote -v && git branch
-          pwd && ls -t1
           echo "查看unity分支"
-          cd ../UGameFrame
+          # cd ../UGameFrame
+          cd ../UGameFrame_Demo
           git remote -v && git branch
           pwd && ls -t1
       
