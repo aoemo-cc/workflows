@@ -122,8 +122,7 @@ jobs:
           echo "查看当前工作目录"
           pwd && ls -t1
           echo "查看unity分支"
-          # cd ../UGameFrame
-          cd ../UGameFrame_Demo
+          cd ../UGameFrame
           git remote -v && git branch
           pwd && ls -t1
       
