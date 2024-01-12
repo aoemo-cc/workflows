@@ -43,12 +43,15 @@ jobs:
     steps:
       - name: 测试环境变量
         run: |
-          Set-Content -Path local.properties -Value "sdk.dir=${ANDROID_HOME}`nndk.dir=${{ steps.setup-ndk.outputs.ndk-path }}"
+          Set-PSDebug -Trace 1
+          
+          Set-Content -Path local.properties -Value "sdk.dir=${ANDROID_HOME}`nndk.dir=123"
           if (Test-Path .\local.properties) { Get-Content .\local.properties }
-          Set-Content -Path local.properties -Value "sdk.dir=${ANDROID_SDK_ROOT}`nndk.dir=${{ steps.setup-ndk.outputs.ndk-path }}"
+          Set-Content -Path local.properties -Value "sdk.dir=${ANDROID_SDK_ROOT}`nndk.dir=123"
           if (Test-Path .\local.properties) { Get-Content .\local.properties }
-          Set-Content -Path local.properties -Value "sdk.dir=C:\Android\android-sdk`nndk.dir=${{ steps.setup-ndk.outputs.ndk-path }}"
+          Set-Content -Path local.properties -Value "sdk.dir=C:\Android\android-sdk`nndk.dir=123"
           if (Test-Path .\local.properties) { Get-Content .\local.properties }
+          Write-Host "打印所有环境变量: $(Get-ChildItem Env:)" -ForegroundColor Yellow
           
       # - name: 配置ndk环境
       #   id: setup-ndk
