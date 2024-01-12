@@ -18,7 +18,7 @@ env:
   flow_language_type: ""
   flow_language_version: ""
   flow_android_repo_type: "github"
-  flow_android_repo_address: "aoemo-cc/UGameAndroid"
+  flow_android_repo_address: "aoemo-cc/UGameFrame_Demo"
   flow_android_repo_user: ""
   flow_android_repo_password: "${{ secrets.GH_TOKEN }}"
   flow_unity_repo_type: "github"
