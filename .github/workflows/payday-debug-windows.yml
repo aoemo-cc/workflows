@@ -193,7 +193,7 @@ jobs:
           Set-Content -Path local.properties -Value "sdk.dir=$env:ANDROID_HOME`nndk.dir=${{ steps.setup-ndk.outputs.ndk-path }}"
           if (Test-Path .\local.properties) { Get-Content .\local.properties }
           
-      - name: gradlew打包
+      - name: 查看安卓工程目录结构
         working-directory: UGameAndroid
         run: |
           Set-PSDebug -Trace 1
@@ -204,7 +204,13 @@ jobs:
           Write-Host "查看gradlew文件信息" -ForegroundColor Yellow
           (Get-Acl "gradlew").Access
           ls ./gradlew
+          ls ./unityLibrary/
+          Write-Host "查看全部目录结构" -ForegroundColor Yellow
+          tree ./
           
+      - name: gradlew打包
+        working-directory: UGameAndroid
+        run: |
           $_flow_pg_name = "${{ env.flow_pg_name }}"
           $_flow_pg_name = $_flow_pg_name.Substring(0,1).ToUpper() + $_flow_pg_name.Substring(1)
           Write-Host "执行 ./gradlew clean" -ForegroundColor Yellow
@@ -219,8 +225,6 @@ jobs:
           }
           Write-Host "查看outputs目录全部信息" -ForegroundColor Yellow
           tree app\build\outputs\apk\release
-          Write-Host "查看符号表目录全部信息" -ForegroundColor Yellow
-          tree ./
     
       # - name: 上传apk
       #   uses: actions/upload-artifact@v3.1.3
