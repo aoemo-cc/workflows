@@ -45,9 +45,9 @@ jobs:
         run: |
           Set-PSDebug -Trace 1
           
-          Set-Content -Path local.properties -Value "sdk.dir=${ANDROID_HOME}`nndk.dir=123"
+          Set-Content -Path local.properties -Value "sdk.dir=$ANDROID_HOME`nndk.dir=123"
           if (Test-Path .\local.properties) { Get-Content .\local.properties }
-          Set-Content -Path local.properties -Value "sdk.dir=${ANDROID_SDK_ROOT}`nndk.dir=123"
+          Set-Content -Path local.properties -Value "sdk.dir=$env:ANDROID_HOME`nndk.dir=123"
           if (Test-Path .\local.properties) { Get-Content .\local.properties }
           Set-Content -Path local.properties -Value "sdk.dir=C:\Android\android-sdk`nndk.dir=123"
           if (Test-Path .\local.properties) { Get-Content .\local.properties }
