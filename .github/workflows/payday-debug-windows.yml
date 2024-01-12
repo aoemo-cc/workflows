@@ -185,7 +185,8 @@ jobs:
           ls UGameFrame\${{ env.flow_pg_name }}_UClient\
           ls UGameFrame\${{ env.flow_pg_name }}_UClient\_ObfuscatorNameTranslation.txt
           cat UGameFrame\${{ env.flow_pg_name }}_UClient\_ObfuscatorNameTranslation.txt
-          tree UGameAndroid/unityLibrary\src\main\Il2CppOutputProject\
+          Write-Host "查看全部目录结构" -ForegroundColor Yellow
+          tree UGameFrame/
           
       - name: 生成local.properties
         working-directory: UGameAndroid
