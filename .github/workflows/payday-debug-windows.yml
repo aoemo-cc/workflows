@@ -200,7 +200,7 @@ jobs:
           Write-Host "当前路径: $(pwd)" -ForegroundColor Yellow
           ls
           Write-Host "查看安卓相关目录" -ForegroundColor Yellow
-          ls ${ANDROID_HOME}
+          ls $env:ANDROID_HOME
           Write-Host "查看gradlew文件信息" -ForegroundColor Yellow
           (Get-Acl "gradlew").Access
           ls ./gradlew
