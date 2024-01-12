@@ -111,8 +111,11 @@ jobs:
         working-directory: UGameAndroid
         run: |
           Set-PSDebug -Trace 1
-          Remove-Item -Path "unityLibrary\*" -ErrorAction SilentlyContinue -Force -Recurse
-          
+          Remove-Item -Path "unityLibrary\src\main\assets" -ErrorAction SilentlyContinue -Force -Recurse
+          Remove-Item -Path "unityLibrary\src\main\jniLibs" -ErrorAction SilentlyContinue -Force -Recurse
+          Remove-Item -Path "unityLibrary\src\main\Il2CppOutputProject" -ErrorAction SilentlyContinue -Force -Recurse
+          Remove-Item -Path "unityLibrary\src\main\jniStaticLibs" -ErrorAction SilentlyContinue -Force -Recurse
+        
       # # - name: 拉unity代码
       # #   uses: ./actions_temp/.github/actions/action-checkout
       # #   with:
