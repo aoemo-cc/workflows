@@ -70,6 +70,10 @@ jobs:
           gradle-version: 6.5
       - name: 验证Gradle环境
         run: Write-Host "gradle版本：$(gradle -v)" -ForegroundColor Yellow
+
+      - name: 查看系统环境变量
+        run: |
+          Write-Host "这是系统环境变量`n$((Get-ChildItem Env: | Out-String))"
         
       # - name: 预建目录
       #   run: mkdir -v actions_temp UGameAndroid UGameFrame
