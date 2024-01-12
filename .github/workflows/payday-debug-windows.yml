@@ -115,6 +115,7 @@ jobs:
           Remove-Item -Path "unityLibrary\src\main\jniLibs" -ErrorAction SilentlyContinue -Force -Recurse
           Remove-Item -Path "unityLibrary\src\main\Il2CppOutputProject" -ErrorAction SilentlyContinue -Force -Recurse
           Remove-Item -Path "unityLibrary\src\main\jniStaticLibs" -ErrorAction SilentlyContinue -Force -Recurse
+          ls unityLibrary\src
         
       # # - name: 拉unity代码
       # #   uses: ./actions_temp/.github/actions/action-checkout
