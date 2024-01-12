@@ -113,8 +113,8 @@ jobs:
         run: |
           Set-PSDebug -Trace 1
           ls UGameFrame\${{ env.flow_pg_name }}_UClient\
-          ls UGameFrame\${{ env.flow_pg_name }}_UClient\_ObfuscatorNameTranslation.txt
-          cat UGameFrame\${{ env.flow_pg_name }}_UClient\_ObfuscatorNameTranslation.txt
+          # ls UGameFrame\${{ env.flow_pg_name }}_UClient\_ObfuscatorNameTranslation.txt
+          # cat UGameFrame\${{ env.flow_pg_name }}_UClient\_ObfuscatorNameTranslation.txt
       - name: 查看Unity工程全部目录结构
         run: |
           Write-Host "查看全部目录结构" -ForegroundColor Yellow
