@@ -41,192 +41,195 @@ jobs:
     name: 编译打包
     runs-on: windows-2022
     steps:
-      - name: 配置ndk环境
-        id: setup-ndk
-        uses: nttld/setup-ndk@v1.4.2
-        with:
-          ndk-version: r19
-          local-cache: true
-          link-to-sdk: true
-      - name: 验证ndk环境
-        run: |
-          Set-PSDebug -Trace 1
-          Write-Host "当前路径: $(pwd)" -ForegroundColor Yellow
-          Write-Host "安装目录：${{ steps.setup-ndk.outputs.ndk-path }}" -ForegroundColor Yellow
-          cd ${{ steps.setup-ndk.outputs.ndk-path }}
-          Write-Host "新的当前路径: $(pwd)" -ForegroundColor Yellow
-          ls
-          cat ./source.properties
-
-      - name: 配置java环境
-        uses: actions/setup-java@v3
-        with:
-          distribution: temurin
-          java-version: 11
-          
-      - name: 配置Gradle环境
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: 6.5
-      - name: 验证Gradle环境
-        run: Write-Host "gradle版本：$(gradle -v)" -ForegroundColor Yellow
-        
-      # - name: 预建目录
-      #   run: mkdir -v actions_temp UGameAndroid UGameFrame
-      # - name: 拉取自定义的action
-      #   uses: actions/checkout@v4.1.1
-      #   with:
-      #     path: 'actions_temp'
-          
-      # # - name: 拉安卓代码
-      # #   uses: ./actions_temp/.github/actions/action-checkout
-      # #   with:
-      # #     repo_type: "${{ env.flow_android_repo_type }}"
-      # #     repository: "${{ env.flow_android_repo_address }}"
-      # #     ref: "${{ env.flow_pg_name }}"
-      # #     username: "${{ env.flow_android_repo_user }}"
-      # #     password: "${{ env.flow_android_repo_password }}"
-      # #     root_dir: "UGameAndroid"
-          
-      - name: 拉安卓代码
-        uses: actions/checkout@v4.1.1
-        with:
-          repository: "${{ env.flow_android_repo_address }}"
-          ref: "_account_${{ env.flow_pg_name }}"
-          token: "${{ env.flow_android_repo_password }}"
-          path: "UGameAndroid"
-
-      - name: 验证拉取操作
-        run: |
-          Set-PSDebug -Trace 1
-          Write-Host "当前路径: $(pwd)" -ForegroundColor Yellow
-          ls
-          Write-Host "查看安卓分支" -ForegroundColor Yellow
-          cd UGameAndroid
-          git remote -v && git branch
-          Write-Host "新的当前路径: $(pwd)" -ForegroundColor Yellow
-          ls
-      
-      - name: 清理旧Unity资源
-        working-directory: UGameAndroid
-        run: |
-          Set-PSDebug -Trace 1
-          Remove-Item -Path "unityLibrary\src\main\assets" -ErrorAction SilentlyContinue -Force -Recurse
-          Remove-Item -Path "unityLibrary\src\main\jniLibs" -ErrorAction SilentlyContinue -Force -Recurse
-          Remove-Item -Path "unityLibrary\src\main\Il2CppOutputProject" -ErrorAction SilentlyContinue -Force -Recurse
-          Remove-Item -Path "unityLibrary\src\main\jniStaticLibs" -ErrorAction SilentlyContinue -Force -Recurse
-          ls unityLibrary\src
-        
-      # # - name: 拉unity代码
-      # #   uses: ./actions_temp/.github/actions/action-checkout
-      # #   with:
-      # #     repo_type: "${{ env.flow_unity_repo_type }}"
-      # #     repository: "${{ env.flow_unity_repo_address }}"
-      # #     ref: "${{ inputs.ref }}"
-      # #     username: "${{ env.flow_unity_repo_user }}"
-      # #     password: "${{ env.flow_unity_repo_password }}"
-      # #     root_dir: "UGameFrame"
-          
-      - name: 拉unity代码
-        uses: actions/checkout@v4.1.1
-        with:
-          repository: "${{ env.flow_unity_repo_address }}"
-          ref: "${{ inputs.ref }}"
-          token: "${{ env.flow_unity_repo_password }}"
-          path: "UGameFrame"
-
-      - name: 验证拉取操作
-        run: |
-          Set-PSDebug -Trace 1
-          Write-Host "当前路径: $(pwd)" -ForegroundColor Yellow
-          ls
-          Write-Host "查看安卓分支" -ForegroundColor Yellow
-          cd UGameFrame
-          git remote -v && git branch
-          Write-Host "新的当前路径: $(pwd)" -ForegroundColor Yellow
-          ls
-      
-      - name: Library缓存
-        uses: actions/cache@v3.3.2
-        with:
-          path: UGameFrame/${{ env.flow_pg_name }}_UClient/Library
-          key: Library-unity-${{ GITHUB.WORKFLOW }}-${{ GITHUB.RUN_NUMBER }}
-          restore-keys: Library-unity-${{ GITHUB.WORKFLOW }}
-      - name: 解决git分支非最新导致错误
-        shell: pwsh
-        working-directory: UGameFrame
-        run: |
-          Set-PSDebug -Trace 1
-          git config --global user.name 'liuming'
-          git config --global user.email 'liuming@aoemo.com'
-          git add -A || true
-          git commit -m "workflow编译临时使用" || true
-          
-      # - name: 清理ubuntu磁盘空间(非必须)
-      #   uses: jlumbroso/free-disk-space@v1.3.1
-      
-      - name: Unity编译
-        uses: game-ci/unity-builder@v4.1.3
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-        with:
-          targetPlatform: Android
-          unityVersion: 2020.3.45f1
-          projectPath: UGameFrame/${{ env.flow_pg_name }}_UClient
-          buildMethod: BuildProjectApkClientTool.BuildUnitySyncAndroidStudio
-          customParameters: -logFile unity_build.log -batchmode -quit
-          # customParameters: -batchmode -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio -quit
-          
-      - name: 验证
-        run: |
-          Set-PSDebug -Trace 1
-          ls UGameFrame\${{ env.flow_pg_name }}_UClient\
-          ls UGameFrame\${{ env.flow_pg_name }}_UClient\_ObfuscatorNameTranslation.txt
-          cat UGameFrame\${{ env.flow_pg_name }}_UClient\_ObfuscatorNameTranslation.txt
-          tree UGameAndroid/unityLibrary\src\main\Il2CppOutputProject\
-          
-      - name: 生成local.properties
-        working-directory: UGameAndroid
+      - name: 测试环境变量
         run: |
           Set-Content -Path local.properties -Value "sdk.dir=${ANDROID_HOME}`nndk.dir=${{ steps.setup-ndk.outputs.ndk-path }}"
           if (Test-Path .\local.properties) { Get-Content .\local.properties }
+          Set-Content -Path local.properties -Value "sdk.dir=${ANDROID_SDK_ROOT}`nndk.dir=${{ steps.setup-ndk.outputs.ndk-path }}"
+          if (Test-Path .\local.properties) { Get-Content .\local.properties }
+          Set-Content -Path local.properties -Value "sdk.dir=C:\Android\android-sdk`nndk.dir=${{ steps.setup-ndk.outputs.ndk-path }}"
+          if (Test-Path .\local.properties) { Get-Content .\local.properties }
           
-      - name: gradlew打包
-        working-directory: UGameAndroid
-        run: |
-          Set-PSDebug -Trace 1
-          Write-Host "当前路径: $(pwd)" -ForegroundColor Yellow
-          ls
-          Write-Host "查看安卓相关目录" -ForegroundColor Yellow
-          ls ${ANDROID_HOME}
-          Write-Host "查看gradlew文件信息" -ForegroundColor Yellow
-          (Get-Acl "gradlew").Access
-          ls ./gradlew
-          
-          $_flow_pg_name = "${{ env.flow_pg_name }}"
-          $_flow_pg_name = $_flow_pg_name.Substring(0,1).ToUpper() + $_flow_pg_name.Substring(1)
-          Write-Host "执行 ./gradlew clean" -ForegroundColor Yellow
-          ./gradlew clean
-          Write-Host "执行 ./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}" -ForegroundColor Yellow
-          ./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}
-          
-          Write-Host "查看app/build/outputs/apk/release目录下内容" -ForegroundColor Yellow
-          Get-Location
-          if (Test-Path -Path 'app\build\outputs\apk\release') { 
-            Get-ChildItem -Path 'app\build\outputs\apk\release' | Sort-Object -Property LastWriteTime -Descending 
-          }
-          Write-Host "查看outputs目录全部信息" -ForegroundColor Yellow
-          tree app\build\outputs\apk\release
-          Write-Host "查看符号表目录全部信息" -ForegroundColor Yellow
-          tree unityLibrary\symbols
+      # - name: 配置ndk环境
+      #   id: setup-ndk
+      #   uses: nttld/setup-ndk@v1.4.2
+      #   with:
+      #     ndk-version: r19
+      #     local-cache: true
+      #     link-to-sdk: true
+      # - name: 验证ndk环境
+      #   run: |
+      #     Set-PSDebug -Trace 1
+      #     Write-Host "当前路径: $(pwd)" -ForegroundColor Yellow
+      #     Write-Host "安装目录：${{ steps.setup-ndk.outputs.ndk-path }}" -ForegroundColor Yellow
+      #     cd ${{ steps.setup-ndk.outputs.ndk-path }}
+      #     Write-Host "新的当前路径: $(pwd)" -ForegroundColor Yellow
+      #     ls
+      #     cat ./source.properties
 
-      - name: 调试环境
-        env:
-          TMATE_ENCRYPT_PASSWORD: ${{secrets.TMATE_ENCRYPT_PASSWORD}}
-          SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
-        uses: tete1030/safe-debugger-action@v1.01
+      # - name: 配置java环境
+      #   uses: actions/setup-java@v3
+      #   with:
+      #     distribution: temurin
+      #     java-version: 11
+          
+      # - name: 配置Gradle环境
+      #   uses: gradle/gradle-build-action@v2
+      #   with:
+      #     gradle-version: 6.5
+      # - name: 验证Gradle环境
+      #   run: Write-Host "gradle版本：$(gradle -v)" -ForegroundColor Yellow
+        
+      # # - name: 预建目录
+      # #   run: mkdir -v actions_temp UGameAndroid UGameFrame
+      # # - name: 拉取自定义的action
+      # #   uses: actions/checkout@v4.1.1
+      # #   with:
+      # #     path: 'actions_temp'
+          
+      # # # - name: 拉安卓代码
+      # # #   uses: ./actions_temp/.github/actions/action-checkout
+      # # #   with:
+      # # #     repo_type: "${{ env.flow_android_repo_type }}"
+      # # #     repository: "${{ env.flow_android_repo_address }}"
+      # # #     ref: "${{ env.flow_pg_name }}"
+      # # #     username: "${{ env.flow_android_repo_user }}"
+      # # #     password: "${{ env.flow_android_repo_password }}"
+      # # #     root_dir: "UGameAndroid"
+          
+      # - name: 拉安卓代码
+      #   uses: actions/checkout@v4.1.1
+      #   with:
+      #     repository: "${{ env.flow_android_repo_address }}"
+      #     ref: "_account_${{ env.flow_pg_name }}"
+      #     token: "${{ env.flow_android_repo_password }}"
+      #     path: "UGameAndroid"
+
+      # - name: 验证拉取操作
+      #   run: |
+      #     Set-PSDebug -Trace 1
+      #     Write-Host "当前路径: $(pwd)" -ForegroundColor Yellow
+      #     ls
+      #     Write-Host "查看安卓分支" -ForegroundColor Yellow
+      #     cd UGameAndroid
+      #     git remote -v && git branch
+      #     Write-Host "新的当前路径: $(pwd)" -ForegroundColor Yellow
+      #     ls
+      
+      # - name: 清理旧Unity资源
+      #   working-directory: UGameAndroid
+      #   run: |
+      #     Set-PSDebug -Trace 1
+      #     Remove-Item -Path "unityLibrary\src\main\assets" -ErrorAction SilentlyContinue -Force -Recurse
+      #     Remove-Item -Path "unityLibrary\src\main\jniLibs" -ErrorAction SilentlyContinue -Force -Recurse
+      #     Remove-Item -Path "unityLibrary\src\main\Il2CppOutputProject" -ErrorAction SilentlyContinue -Force -Recurse
+      #     Remove-Item -Path "unityLibrary\src\main\jniStaticLibs" -ErrorAction SilentlyContinue -Force -Recurse
+      #     ls unityLibrary\src
+        
+      # # # - name: 拉unity代码
+      # # #   uses: ./actions_temp/.github/actions/action-checkout
+      # # #   with:
+      # # #     repo_type: "${{ env.flow_unity_repo_type }}"
+      # # #     repository: "${{ env.flow_unity_repo_address }}"
+      # # #     ref: "${{ inputs.ref }}"
+      # # #     username: "${{ env.flow_unity_repo_user }}"
+      # # #     password: "${{ env.flow_unity_repo_password }}"
+      # # #     root_dir: "UGameFrame"
+          
+      # - name: 拉unity代码
+      #   uses: actions/checkout@v4.1.1
+      #   with:
+      #     repository: "${{ env.flow_unity_repo_address }}"
+      #     ref: "${{ inputs.ref }}"
+      #     token: "${{ env.flow_unity_repo_password }}"
+      #     path: "UGameFrame"
+
+      # - name: 验证拉取操作
+      #   run: |
+      #     Set-PSDebug -Trace 1
+      #     Write-Host "当前路径: $(pwd)" -ForegroundColor Yellow
+      #     ls
+      #     Write-Host "查看安卓分支" -ForegroundColor Yellow
+      #     cd UGameFrame
+      #     git remote -v && git branch
+      #     Write-Host "新的当前路径: $(pwd)" -ForegroundColor Yellow
+      #     ls
+      
+      # - name: Library缓存
+      #   uses: actions/cache@v3.3.2
+      #   with:
+      #     path: UGameFrame/${{ env.flow_pg_name }}_UClient/Library
+      #     key: Library-unity-${{ GITHUB.WORKFLOW }}-${{ GITHUB.RUN_NUMBER }}
+      #     restore-keys: Library-unity-${{ GITHUB.WORKFLOW }}
+      # - name: 解决git分支非最新导致错误
+      #   shell: pwsh
+      #   working-directory: UGameFrame
+      #   run: |
+      #     Set-PSDebug -Trace 1
+      #     git config --global user.name 'liuming'
+      #     git config --global user.email 'liuming@aoemo.com'
+      #     git add -A || true
+      #     git commit -m "workflow编译临时使用" || true
+          
+      # # - name: 清理ubuntu磁盘空间(非必须)
+      # #   uses: jlumbroso/free-disk-space@v1.3.1
+      
+      # - name: Unity编译
+      #   uses: game-ci/unity-builder@v4.1.3
+      #   env:
+      #     UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      #     UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      #     UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+      #   with:
+      #     targetPlatform: Android
+      #     unityVersion: 2020.3.45f1
+      #     projectPath: UGameFrame/${{ env.flow_pg_name }}_UClient
+      #     buildMethod: BuildProjectApkClientTool.BuildUnitySyncAndroidStudio
+      #     customParameters: -logFile unity_build.log -batchmode -quit
+      #     # customParameters: -batchmode -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio -quit
+          
+      # - name: 验证
+      #   run: |
+      #     Set-PSDebug -Trace 1
+      #     ls UGameFrame\${{ env.flow_pg_name }}_UClient\
+      #     ls UGameFrame\${{ env.flow_pg_name }}_UClient\_ObfuscatorNameTranslation.txt
+      #     cat UGameFrame\${{ env.flow_pg_name }}_UClient\_ObfuscatorNameTranslation.txt
+      #     tree UGameAndroid/unityLibrary\src\main\Il2CppOutputProject\
+          
+      # - name: 生成local.properties
+      #   working-directory: UGameAndroid
+      #   run: |
+      #     Set-Content -Path local.properties -Value "sdk.dir=${ANDROID_HOME}`nndk.dir=${{ steps.setup-ndk.outputs.ndk-path }}"
+      #     if (Test-Path .\local.properties) { Get-Content .\local.properties }
+          
+      # - name: gradlew打包
+      #   working-directory: UGameAndroid
+      #   run: |
+      #     Set-PSDebug -Trace 1
+      #     Write-Host "当前路径: $(pwd)" -ForegroundColor Yellow
+      #     ls
+      #     Write-Host "查看安卓相关目录" -ForegroundColor Yellow
+      #     ls ${ANDROID_HOME}
+      #     Write-Host "查看gradlew文件信息" -ForegroundColor Yellow
+      #     (Get-Acl "gradlew").Access
+      #     ls ./gradlew
+          
+      #     $_flow_pg_name = "${{ env.flow_pg_name }}"
+      #     $_flow_pg_name = $_flow_pg_name.Substring(0,1).ToUpper() + $_flow_pg_name.Substring(1)
+      #     Write-Host "执行 ./gradlew clean" -ForegroundColor Yellow
+      #     ./gradlew clean
+      #     Write-Host "执行 ./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}" -ForegroundColor Yellow
+      #     ./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}
+          
+      #     Write-Host "查看app/build/outputs/apk/release目录下内容" -ForegroundColor Yellow
+      #     Get-Location
+      #     if (Test-Path -Path 'app\build\outputs\apk\release') { 
+      #       Get-ChildItem -Path 'app\build\outputs\apk\release' | Sort-Object -Property LastWriteTime -Descending 
+      #     }
+      #     Write-Host "查看outputs目录全部信息" -ForegroundColor Yellow
+      #     tree app\build\outputs\apk\release
+      #     Write-Host "查看符号表目录全部信息" -ForegroundColor Yellow
+      #     tree ./
     
       # - name: 上传apk
       #   uses: actions/upload-artifact@v3.1.3
