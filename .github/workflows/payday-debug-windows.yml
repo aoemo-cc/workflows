@@ -192,7 +192,7 @@ jobs:
       - name: 查看Unity工程全部目录结构
         run: |
           Write-Host "查看全部目录结构" -ForegroundColor Yellow
-          tree UGameFrame/
+          tree /A UGameFrame/
           
       - name: 生成local.properties
         working-directory: UGameAndroid
@@ -213,7 +213,7 @@ jobs:
           ls ./gradlew
           ls ./unityLibrary/
           Write-Host "查看全部目录结构" -ForegroundColor Yellow
-          tree ./
+          tree /A ./
           
       - name: gradlew打包
         working-directory: UGameAndroid
@@ -232,6 +232,12 @@ jobs:
           }
           Write-Host "查看outputs目录全部信息" -ForegroundColor Yellow
           tree app\build\outputs\apk\release
+          
+      - name: 查看安卓工程目录结构
+        working-directory: UGameAndroid
+        run: |
+          Write-Host "查看全部目录结构" -ForegroundColor Yellow
+          tree /A ./unityLibrary/
     
       # - name: 上传apk
       #   uses: actions/upload-artifact@v3.1.3
