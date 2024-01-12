@@ -178,9 +178,9 @@ jobs:
         with:
           targetPlatform: Android
           unityVersion: 2020.3.45f1
-          projectPath: UGameFrame/${{ env.flow_pg_name }}_UClient
+          projectPath: UGameFrame\${{ env.flow_pg_name }}_UClient
           buildMethod: BuildProjectApkClientTool.BuildUnitySyncAndroidStudio
-          customParameters: -logFile unity_build.log -batchmode -quit
+          # customParameters: -logFile unity_build.log -batchmode -quit
           # customParameters: -batchmode -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio -quit
           
       - name: 验证1
