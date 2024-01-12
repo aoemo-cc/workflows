@@ -174,12 +174,6 @@ jobs:
           buildMethod: BuildProjectApkClientTool.BuildUnitySyncAndroidStudio
           customParameters: -logFile unity_build.log -batchmode -quit
           # customParameters: -batchmode -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio -quit
-
-      # - name: 调试环境
-      #   env:
-      #     TMATE_ENCRYPT_PASSWORD: ${{secrets.TMATE_ENCRYPT_PASSWORD}}
-      #     SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
-      #   uses: tete1030/safe-debugger-action@v1.01
           
       - name: 验证
         run: |
@@ -223,6 +217,12 @@ jobs:
           tree app\build\outputs\apk\release
           Write-Host "查看符号表目录全部信息" -ForegroundColor Yellow
           tree unityLibrary\symbols
+
+      - name: 调试环境
+        env:
+          TMATE_ENCRYPT_PASSWORD: ${{secrets.TMATE_ENCRYPT_PASSWORD}}
+          SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
+        uses: tete1030/safe-debugger-action@v1.01
     
       # - name: 上传apk
       #   uses: actions/upload-artifact@v3.1.3
