@@ -63,7 +63,7 @@ jobs:
         uses: actions/cache@v3.3.2
         with:
           path: $env:ANDROID_HOME
-          key: Android-SDK-${{ runner.os }}
+          key: Android-SDK-${{ runner.os }}-${{ github.run_id }}
           restore-keys: Android-SDK-${{ runner.os }}
           
       # # - name: 配置ndk环境
