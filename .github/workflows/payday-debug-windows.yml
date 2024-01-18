@@ -48,19 +48,19 @@ jobs:
       - run: |
           Set-PSDebug -Trace 1
           Remove-Item -Path "C:\\Android\\android-sdk" -ErrorAction SilentlyContinue -Force -Recurse
-          ls C:\Android\
-          ls C:\\Android\\
+          ls C:\Program Files (x86)\Android\
           
       - name: Android SDK 缓存
         uses: actions/cache@v3.3.2
         with:
-          path: "C:\\Android\\android-sdk"
+          path: "C:\\Program Files (x86)\\Android\android-sdk"
           key: Android-SDK-${{ runner.os }}-${{ github.run_id }}
           restore-keys: Android-SDK-${{ runner.os }}
           
       - run: |
           Set-PSDebug -Trace 1
-          ls C:\Android\
+          ls C:\Program Files (x86)\Android\
+          ls C:\Program Files (x86)\Android\android-sdk
           ls $env:ANDROID_HOME
           ls $env:ANDROID_HOME\ndk
       
