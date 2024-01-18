@@ -47,9 +47,11 @@ jobs:
           echo "$env:ANDROID_HOME"
       - run: |
           Set-PSDebug -Trace 1
-          Remove-Item -Path "C:\\Android\\android-sdk" -ErrorAction SilentlyContinue -Force -Recurse
           ls C:\Android\android-sdk
           ls C:\Program Files (x86)\Android\android-sdk
+          Remove-Item -Path "C:\\Android\\android-sdk" -ErrorAction SilentlyContinue -Force -Recurse
+          ls C:\Android\
+          ls C:\Program Files (x86)\Android\
           
       # - name: Android SDK 缓存
       #   uses: actions/cache@v3.3.2
