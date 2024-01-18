@@ -49,7 +49,7 @@ jobs:
       - name: Android SDK 缓存
         uses: actions/cache@v3.3.2
         with:
-          path: C:\Android\android-sdk
+          path: "C:\\Android\\android-sdk"
           key: Android-SDK-${{ runner.os }}-${{ github.run_id }}
           restore-keys: Android-SDK-${{ runner.os }}
       
@@ -69,6 +69,7 @@ jobs:
         run: |
           & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat --list_installed
           Write-Host "查看安卓相关目录" -ForegroundColor Yellow
+          Write-Host "执行命令：$(ls $env:ANDROID_HOME)" -ForegroundColor Yellow
           ls $env:ANDROID_HOME
           
       # # - name: 配置ndk环境
