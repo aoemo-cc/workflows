@@ -58,6 +58,10 @@ jobs:
           path: "C:\\Android\\android-sdk"
           key: Android-SDK-${{ runner.os }}-${{ github.run_id }}
           restore-keys: Android-SDK-${{ runner.os }}
+          
+      - run: |
+          Set-PSDebug -Trace 1
+          ls $env:ANDROID_HOME
       
       # - name: 查看 Android SDK 已安装软件包
       #   run: |
