@@ -56,9 +56,12 @@ jobs:
       - name: 查看 Android SDK 已安装软件包
         run: |
           & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat --list_installed
+          
+      - name: 同意Android SDK许可
+        uses: SimonMarquis/android-accept-licenses@v1
+          
       - name: Android SDK软件包安装
         run: |
-          , 'y' * 100 | & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat --licenses
           & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat --install "ndk;19.0.5232133" "cmake;3.22.1"
           & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "add-ons;addon-google_apis-google-24" "build-tools;29.0.3" "emulator"  "ndk-bundle" 
           & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "extras;android;m2repository" "extras;google;google_play_services" "extras;google;m2repository" 
