@@ -48,7 +48,7 @@ jobs:
       - run: |
           Set-PSDebug -Trace 1
           Remove-Item -Path "C:\\Android\\android-sdk" -ErrorAction SilentlyContinue -Force -Recurse
-          ls C:\Program Files (x86)\Android\
+          ls "C:\\Program Files\ \(x86\)\\Android\\"
           
       - name: Android SDK 缓存
         uses: actions/cache@v3.3.2
