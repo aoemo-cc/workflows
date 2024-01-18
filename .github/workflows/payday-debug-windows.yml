@@ -45,7 +45,13 @@ jobs:
         run: |
           echo "${{ env.ANDROID_HOME }}"
           echo "$env:ANDROID_HOME"
-      
+      - run: |
+          Set-PSDebug -Trace 1
+          Remove-Item -Path "C:\\Android\\android-sdk\\" -ErrorAction SilentlyContinue -Force -Recurse
+          ls C:\Android\android-sdk\
+          ls C:\\Android\\android-sdk\\
+          ls $env:ANDROID_HOME
+          
       - name: Android SDK 缓存
         uses: actions/cache@v3.3.2
         with:
@@ -53,27 +59,27 @@ jobs:
           key: Android-SDK-${{ runner.os }}-${{ github.run_id }}
           restore-keys: Android-SDK-${{ runner.os }}
       
-      - name: 查看 Android SDK 已安装软件包
-        run: |
-          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat --list_installed
+      # - name: 查看 Android SDK 已安装软件包
+      #   run: |
+      #     & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat --list_installed
           
-      - name: 同意Android SDK许可
-        uses: SimonMarquis/android-accept-licenses@v1
+      # - name: 同意Android SDK许可
+      #   uses: SimonMarquis/android-accept-licenses@v1
           
-      - name: Android SDK软件包安装
-        run: |
-          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat --install "ndk;19.0.5232133" "cmake;3.22.1"
-          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "add-ons;addon-google_apis-google-24" "build-tools;29.0.3" "emulator"  "ndk-bundle" 
-          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "extras;android;m2repository" "extras;google;google_play_services" "extras;google;m2repository" 
-          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "platforms;android-29" "platforms;android-30" "platforms;android-31" "platforms;android-32" "platforms;android-33" "platforms;android-34"
-          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "sources;android-29"  "sources;android-31"   "sources;android-33" 
-          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "system-images;android-27;default;arm64-v8a" "system-images;android-27;google_apis;arm64-v8a" "system-images;android-30;android-wear-cn;arm64-v8a" "system-images;android-30;android-wear;arm64-v8a" "system-images;android-30;aosp_atd;arm64-v8a" "system-images;android-30;default;arm64-v8a" "system-images;android-30;google_apis;arm64-v8a" "system-images;android-30;google_atd;arm64-v8a" "system-images;android-33;android-automotive;arm64-v8a" "system-images;android-33;android-desktop;arm64-v8a" "system-images;android-33;android-tv;arm64-v8a" "system-images;android-33;android-wear;arm64-v8a" "system-images;android-33;aosp_atd;arm64-v8a" "system-images;android-33;default;arm64-v8a" "system-images;android-33;google-tv;arm64-v8a" "system-images;android-33;google_apis;arm64-v8a" "system-images;android-33;google_atd;arm64-v8a"
-      - name: 查看 Android SDK 已安装软件包
-        run: |
-          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat --list_installed
-          Write-Host "查看安卓相关目录" -ForegroundColor Yellow
-          Write-Host "执行命令：$(ls $env:ANDROID_HOME)" -ForegroundColor Yellow
-          ls $env:ANDROID_HOME
+      # - name: Android SDK软件包安装
+      #   run: |
+      #     & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat --install "ndk;19.0.5232133" "cmake;3.22.1"
+      #     & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "add-ons;addon-google_apis-google-24" "build-tools;29.0.3" "emulator"  "ndk-bundle" 
+      #     & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "extras;android;m2repository" "extras;google;google_play_services" "extras;google;m2repository" 
+      #     & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "platforms;android-29" "platforms;android-30" "platforms;android-31" "platforms;android-32" "platforms;android-33" "platforms;android-34"
+      #     & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "sources;android-29"  "sources;android-31"   "sources;android-33" 
+      #     & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "system-images;android-27;default;arm64-v8a" "system-images;android-27;google_apis;arm64-v8a" "system-images;android-30;android-wear-cn;arm64-v8a" "system-images;android-30;android-wear;arm64-v8a" "system-images;android-30;aosp_atd;arm64-v8a" "system-images;android-30;default;arm64-v8a" "system-images;android-30;google_apis;arm64-v8a" "system-images;android-30;google_atd;arm64-v8a" "system-images;android-33;android-automotive;arm64-v8a" "system-images;android-33;android-desktop;arm64-v8a" "system-images;android-33;android-tv;arm64-v8a" "system-images;android-33;android-wear;arm64-v8a" "system-images;android-33;aosp_atd;arm64-v8a" "system-images;android-33;default;arm64-v8a" "system-images;android-33;google-tv;arm64-v8a" "system-images;android-33;google_apis;arm64-v8a" "system-images;android-33;google_atd;arm64-v8a"
+      # - name: 查看 Android SDK 已安装软件包
+      #   run: |
+      #     & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat --list_installed
+      #     Write-Host "查看安卓相关目录" -ForegroundColor Yellow
+      #     Write-Host "执行命令：$(ls $env:ANDROID_HOME)" -ForegroundColor Yellow
+      #     ls $env:ANDROID_HOME
           
       # # - name: 配置ndk环境
       # #   id: setup-ndk
