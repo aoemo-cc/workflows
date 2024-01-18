@@ -60,7 +60,9 @@ jobs:
           
       - run: |
           Set-PSDebug -Trace 1
+          ls C:\Android\
           ls $env:ANDROID_HOME
+          ls $env:ANDROID_HOME\ndk
       
       # - name: 查看 Android SDK 已安装软件包
       #   run: |
