@@ -80,9 +80,10 @@ jobs:
       
       - name: 查看 Android SDK 已安装软件包
         run: |
+          Set-PSDebug -Trace 1
           & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat --list_installed
-          Write-Host "查看安卓相关目录" -ForegroundColor Yellow
-          Write-Host "执行命令：$(ls $env:ANDROID_HOME)" -ForegroundColor Yellow
+          ls "C:\Android\"
+          ls "C:\Program Files (x86)\Android\
           ls $env:ANDROID_HOME
           cat $env:ANDROID_HOME\1.txt
           
