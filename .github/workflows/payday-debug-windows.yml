@@ -41,23 +41,24 @@ jobs:
     name: 编译打包
     runs-on: windows-2022
     steps:
+      - name: 清理前 - 查看磁盘空间
+        run: |
+          Get-PSDrive -PSProvider FileSystem
       - name: "磁盘空间清理"
         uses: "hugoalh/disk-space-optimizer-ghaction@v0.8.1"
         with:
           # general_include: ".+"
-          general_exclude: |
-            "Android*"
-            "Java*"
+          general_exclude: "(Android|Java)*"
           docker_include: ".+"
           docker_prune: "True"
           docker_clean: "True"
           npm_prune: "True"
           npm_clean: "True"
           os_swap: "True"
-      - name: 查看磁盘空间
+      - name: 清理后 - 查看磁盘空间
         run: |
           Get-PSDrive -PSProvider FileSystem
-      - name: 查看磁盘空间
+      - name: 查看必要软件包是否存在
         run: |
           Set-PSDebug -Trace 1
           ls $env:ANDROID_HOME\ndk
