@@ -49,7 +49,7 @@ jobs:
         uses: "hugoalh/disk-space-optimizer-ghaction@v0.8.1"
         with:
           # general_include: ".+"
-          general_exclude: "(Android|Java)*"
+          general_exclude: "([Aa]ndroid|[Jj]ava).*"
           docker_include: ".+"
           docker_prune: "True"
           docker_clean: "True"
