@@ -44,7 +44,7 @@ jobs:
       - name: 清理前 - 查看磁盘空间
         run: |
           Get-PSDrive -PSProvider FileSystem
-          java --version 
+          ls "$Env:AGENT_TOOLSDIRECTORY\\Java_*_jdk\\11.*"
       - name: "磁盘空间清理"
         uses: "hugoalh/disk-space-optimizer-ghaction@v0.8.1"
         with:
@@ -64,8 +64,8 @@ jobs:
           Set-PSDebug -Trace 1
           ls $env:ANDROID_HOME\ndk
           & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat --list_installed
-          java --version 
-          ls "$Env:AGENT_TOOLSDIRECTORY\\Java_*_jdk\\17.*"
+          # java --version 
+          ls "$Env:AGENT_TOOLSDIRECTORY\\Java_*_jdk\\11.*"
           
       # # - name: Android SDK 缓存
       # #   uses: actions/cache@v3.3.2
