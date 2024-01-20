@@ -44,6 +44,7 @@ jobs:
       - name: 清理前 - 查看磁盘空间
         run: |
           Get-PSDrive -PSProvider FileSystem
+          java --version 
       - name: "磁盘空间清理"
         uses: "hugoalh/disk-space-optimizer-ghaction@v0.8.1"
         with:
