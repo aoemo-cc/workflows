@@ -71,11 +71,9 @@ jobs:
       - name: Android SDK软件包安装
         run: |
           & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat --install "ndk;19.0.5232133" "cmake;3.22.1"
-          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "add-ons;addon-google_apis-google-24" "build-tools;29.0.3" "emulator"  "ndk-bundle" 
-          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "extras;android;m2repository" "extras;google;google_play_services" "extras;google;m2repository" 
-          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "platforms;android-29" "platforms;android-30" "platforms;android-31" "platforms;android-32" "platforms;android-33" "platforms;android-34"
-          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "sources;android-29"  "sources;android-31"   "sources;android-33" 
-          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "system-images;android-27;default;arm64-v8a" "system-images;android-27;google_apis;arm64-v8a" "system-images;android-30;android-wear-cn;arm64-v8a" "system-images;android-30;android-wear;arm64-v8a" "system-images;android-30;aosp_atd;arm64-v8a" "system-images;android-30;default;arm64-v8a" "system-images;android-30;google_apis;arm64-v8a" "system-images;android-30;google_atd;arm64-v8a" "system-images;android-33;android-automotive;arm64-v8a" "system-images;android-33;android-desktop;arm64-v8a" "system-images;android-33;android-tv;arm64-v8a" "system-images;android-33;android-wear;arm64-v8a" "system-images;android-33;aosp_atd;arm64-v8a" "system-images;android-33;default;arm64-v8a" "system-images;android-33;google-tv;arm64-v8a" "system-images;android-33;google_apis;arm64-v8a" "system-images;android-33;google_atd;arm64-v8a"
+          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "platforms;android-33"
+          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "sources;android-33" 
+          & $env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat "system-images;android-33;android-tv;arm64-v8a" "system-images;android-33;android-wear;arm64-v8a" "system-images;android-33;aosp_atd;arm64-v8a" "system-images;android-33;default;arm64-v8a" "system-images;android-33;google-tv;arm64-v8a" "system-images;android-33;google_apis;arm64-v8a" "system-images;android-33;google_atd;arm64-v8a"
           
       - name: 查看Android SDK目录
         run: |
@@ -146,10 +144,9 @@ jobs:
           repository: "${{ env.flow_android_repo_address }}"
           ref: "_account_${{ env.flow_pg_name }}"
           token: "${{ env.flow_android_repo_password }}"
-          path: "D:\\UGameAndroid"
+          path: "UGameAndroid"
 
       - name: 验证拉取操作
-        working-directory: "D:\\"
         run: |
           Set-PSDebug -Trace 1
           Write-Host "当前路径: $(pwd)" -ForegroundColor Yellow
@@ -188,10 +185,9 @@ jobs:
           repository: "${{ env.flow_unity_repo_address }}"
           ref: "${{ inputs.ref }}"
           token: "${{ env.flow_unity_repo_password }}"
-          path: "D:\\UGameFrame"
+          path: "UGameFrame"
 
       - name: 验证拉取操作
-        working-directory: "D:\\"
         run: |
           Set-PSDebug -Trace 1
           Write-Host "当前路径: $(pwd)" -ForegroundColor Yellow
@@ -207,12 +203,12 @@ jobs:
       - name: Library缓存
         uses: actions/cache@v3.3.2
         with:
-          path: "D:\\UGameFrame\\${{ env.flow_pg_name }}_UClient\\Library"
+          path: "UGameFrame\\${{ env.flow_pg_name }}_UClient\\Library"
           key: Library-unity-${{ GITHUB.WORKFLOW }}-${{ github.run_id }}
           restore-keys: Library-unity-${{ GITHUB.WORKFLOW }}
       - name: 解决git分支非最新导致错误
         shell: pwsh
-        working-directory: "D:\\UGameFrame"
+        working-directory: "UGameFrame"
         run: |
           Set-PSDebug -Trace 1
           git config --global user.name 'liuming'
@@ -232,19 +228,17 @@ jobs:
         with:
           targetPlatform: Android
           unityVersion: 2020.3.45f1
-          projectPath: D:\UGameFrame\${{ env.flow_pg_name }}_UClient
+          projectPath: UGameFrame\${{ env.flow_pg_name }}_UClient
           buildMethod: BuildProjectApkClientTool.BuildUnitySyncAndroidStudio
           # customParameters: -logFile unity_build.log -batchmode -quit
           # customParameters: -batchmode -executeMethod BuildProjectApkClientTool.BuildUnitySyncAndroidStudio -quit 
       - name: 验证1
-        working-directory: "D:\\"
         run: |
           Set-PSDebug -Trace 1
           ls UGameFrame\${{ env.flow_pg_name }}_UClient\
           ls UGameFrame\${{ env.flow_pg_name }}_UClient\_ObfuscatorNameTranslation.txt
           cat UGameFrame\${{ env.flow_pg_name }}_UClient\_ObfuscatorNameTranslation.txt
       - name: 查看Unity工程全部目录结构
-        working-directory: "D:\\"
         run: |
           Write-Host "查看全部目录结构" -ForegroundColor Yellow
           tree /A UGameFrame/
@@ -252,14 +246,14 @@ jobs:
         run: Get-PSDrive -PSProvider FileSystem
           
       - name: 生成local.properties
-        working-directory: "D:\\UGameAndroid"
+        working-directory: "UGameAndroid"
         run: |
           # Set-Content -Path local.properties -Value "sdk.dir=$env:ANDROID_HOME`nndk.dir=${{ steps.setup-ndk.outputs.ndk-path }}"
           Set-Content -Path local.properties -Value "sdk.dir=$env:ANDROID_HOME"
           if (Test-Path .\local.properties) { Get-Content .\local.properties }
           
       - name: 查看安卓工程目录结构
-        working-directory: "D:\\UGameAndroid"
+        working-directory: "UGameAndroid"
         run: |
           Set-PSDebug -Trace 1
           Write-Host "当前路径: $(pwd)" -ForegroundColor Yellow
@@ -271,7 +265,7 @@ jobs:
           ls unityLibrary\src\main\jniLibs\arm64-v8a
           
       - name: gradlew打包
-        working-directory: "D:\\UGameAndroid"
+        working-directory: "UGameAndroid"
         run: |
           $_flow_pg_name = "${{ env.flow_pg_name }}"
           $_flow_pg_name = $_flow_pg_name.Substring(0,1).ToUpper() + $_flow_pg_name.Substring(1)
@@ -290,7 +284,7 @@ jobs:
           tree app\build\outputs\apk\release
           
       - name: 查看安卓工程目录结构
-        working-directory: "D:\\UGameAndroid"
+        working-directory: "UGameAndroid"
         run: |
           Write-Host "查看全部目录结构" -ForegroundColor Yellow
           tree /A ./unityLibrary/
