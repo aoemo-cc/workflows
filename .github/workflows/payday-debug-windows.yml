@@ -273,11 +273,12 @@ jobs:
       - name: gradlew打包
         working-directory: "UGameAndroid"
         run: |
+          Set-PSDebug -Trace 1
           $_flow_pg_name = "${{ env.flow_pg_name }}"
           $_flow_pg_name = $_flow_pg_name.Substring(0,1).ToUpper() + $_flow_pg_name.Substring(1)
           Write-Host "执行 ./gradlew clean" -ForegroundColor Yellow
           ./gradlew clean
-          Write-Host "执行 ./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}" -ForegroundColor Yellow
+          Write-Host "执行 ./gradlew clean assemble${_flow_pg_name}${{ env.flow_env }}" -ForegroundColor Yellow
           # ./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}
           ./gradlew clean assemble${_flow_pg_name}${{ env.flow_env }}
           
