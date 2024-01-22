@@ -255,7 +255,7 @@ jobs:
         working-directory: "UGameAndroid"
         run: |
           # Set-Content -Path local.properties -Value "sdk.dir=$env:ANDROID_HOME`nndk.dir=${{ steps.setup-ndk.outputs.ndk-path }}"
-          Set-Content -Path local.properties -Value "sdk.dir==C\:\\Android\\android-sdk`nndk.dir=C\:\\Android\\android-sdk\\ndk\\19.0.5232133"
+          Set-Content -Path local.properties -Value "sdk.dir=C\:\\Android\\android-sdk`nndk.dir=C\:\\Android\\android-sdk\\ndk\\19.0.5232133"
           if (Test-Path .\local.properties) { Get-Content .\local.properties }
           
       - name: 查看安卓工程目录结构
