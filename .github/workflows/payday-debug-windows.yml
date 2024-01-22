@@ -282,13 +282,11 @@ jobs:
           # ./gradlew clean bundle${_flow_pg_name}${{ env.flow_env }}
           ./gradlew clean assemble${_flow_pg_name}${{ env.flow_env }}
           
-          Write-Host "查看app/build/outputs/apk/release目录下内容" -ForegroundColor Yellow
-          Get-Location
-          if (Test-Path -Path 'app\build\outputs\apk\release') { 
-            Get-ChildItem -Path 'app\build\outputs\apk\release' | Sort-Object -Property LastWriteTime -Descending 
-          }
-          Write-Host "查看outputs目录全部信息" -ForegroundColor Yellow
-          tree app\build\outputs\apk\release
+          Write-Host "查看apk/aab文件" -ForegroundColor Yellow
+          Get-ChildItem -Path app\build\outputs\ -Recurse -Filter *.aab
+          
+          Write-Host "查看符号表文件" -ForegroundColor Yellow
+          Get-ChildItem -Path unityLibrary\symbols -Recurse -Filter *.so
           
       - name: 查看安卓工程目录结构
         working-directory: "UGameAndroid"
@@ -299,13 +297,21 @@ jobs:
         run: Get-PSDrive -PSProvider FileSystem
 
 
-    
-      # - name: 上传apk
-      #   uses: actions/upload-artifact@v3.1.3
-      #   with:
-      #     name: apk_1
-      #     path: |
-      #       app/build/outputs/apk/release/app-release.apk
+      - name: 上传apk
+        uses: actions/upload-artifact@v3.1.3
+        with:
+          name: apk_1
+          path: |
+            UGameAndroid/app/build/outputs/**/*.apk
+            UGameAndroid/app/build/outputs/**/*.aab
+
+
+      - name: 上传符号表
+        uses: actions/upload-artifact@v3.1.3
+        with:
+          name: so
+          path: |
+            UGameAndroid/unityLibrary/symbols/*.so
     
       # - name: 上传json文件
       #   uses: actions/upload-artifact@v3.1.3
