@@ -311,7 +311,7 @@ jobs:
         with:
           name: so
           path: |
-            UGameAndroid/unityLibrary/symbols/*.so
+            UGameAndroid/unityLibrary/symbols/**/*.so
     
       # - name: 上传json文件
       #   uses: actions/upload-artifact@v3.1.3
